@@ -2,6 +2,17 @@
 
 Home Assistant Dashboard created by Daniyal Ali
 
+# Prerequisites
+- Stack-In-Card
+- Card Mod
+- Layout Card
+- Mushroom
+- weather-clock-card
+- swipe-card
+- slider-card
+- mini-graph-card
+- mini-media-player
+
 # Installation
 - Create a new Dashboard
 - Click 'Raw Configuration Editor'
