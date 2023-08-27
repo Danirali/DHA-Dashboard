@@ -12,8 +12,8 @@ Home Assistant Dashboard created by Daniyal Ali
 - slider-card
 - mini-graph-card
 - mini-media-player
--> Frigate
--> WebRTC
+* Frigate
+* WebRTC
 
 # Installation
 - Create a new Dashboard
