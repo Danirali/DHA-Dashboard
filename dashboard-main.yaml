@@ -1,0 +1,4786 @@
+views:
+  - title: Home
+    visible:
+      - user: a189ea3f02f9459f937fb565400bc7f2
+      - user: 30bb27433ba44e5fb06176192c039cc7
+      - user: 0ab4432c64a84087818806c4ba2963f6
+      - user: 8ca2ce7c2b6e40b2a4ca218415631032
+      - user: 2dd0c5bfaaad46d791a576de99b428ab
+    type: custom:vertical-layout
+    path: main
+    layout: {}
+    theme: No Borders Daniyal
+    badges: []
+    background: center / cover no-repeat fixed rgb(45, 45, 45)
+    cards:
+      - type: custom:mushroom-chips-card
+        chips:
+          - type: menu
+          - type: template
+            content: |-
+              {% if states('switch.immersion_switch') == 'on' %}
+                  {% if is_state('timer.immersion_timer','active') %}
+                
+                {% set finish_timestamp = as_datetime(state_attr('timer.immersion_timer','finishes_at')) %}
+                {% set current_timestamp = now() %}
+                {% set remaining_in_seconds = (finish_timestamp - current_timestamp).seconds %}
+                {{ timedelta(seconds = remaining_in_seconds) }}
+                
+                {% else %}
+                
+                {{ '00:00:00' }}
+                
+                {% endif %}
+              {% endif %}
+            icon: mdi:water
+            icon_color: |-
+              {% if states('switch.immersion_switch') == 'off' %}
+                blue
+              {% elif states('switch.immersion_switch') == 'on' %}
+                red
+              {% else %}
+                green
+              {% endif %}
+            tap_action:
+              action: navigate
+              navigation_path: /dashboard-main/immersion
+            hold_action:
+              action: more-info
+            entity: switch.immersion_switch
+            double_tap_action:
+              action: none
+          - type: alarm-control-panel
+            entity: alarm_control_panel.arcadia_alarm
+            content_info: none
+            tap_action:
+              action: more-info
+            hold_action:
+              action: navigate
+              navigation_path: /alarmo
+          - type: template
+            double_tap_action:
+              action: none
+            icon: mdi:account-group
+            icon_color: orange
+            tap_action:
+              action: navigate
+              navigation_path: /dashboard-main/People-status
+            hold_action:
+              action: none
+          - type: template
+            icon: mdi:bullhorn
+            icon_color: red
+            tap_action:
+              action: navigate
+              navigation_path: announcements
+            double_tap_action:
+              action: none
+            hold_action:
+              action: none
+          - type: template
+            entity: sensor.shellyem3_channel_a_power
+            icon: mdi:home-lightning-bolt
+            icon_color: amber
+            content: |-
+              {% if states('sensor.shellyem3_channel_a_power')|int > 1000 %}
+                {{ (states('sensor.shellyem3_channel_a_power')|int / 1000)|round(2) }} kW
+              {% else %}
+                {{ states('sensor.shellyem3_channel_a_power') }} W
+              {% endif %}
+            double_tap_action:
+              action: none
+            tap_action:
+              action: more-info
+            hold_action:
+              action: navigate
+              navigation_path: /energy
+          - type: template
+            icon: mdi:server
+            tap_action:
+              action: navigate
+              navigation_path: cpu
+            icon_color: green
+        alignment: center
+      - type: custom:gap-card
+        height: 10
+      - type: custom:swipe-card
+        cards:
+          - type: custom:clock-weather-card
+            entity: weather.forecast_arcadia
+            animated_icon: true
+            weather_icon_type: fill
+            forecast_days: 5
+            locale: en-GB
+            time_format: 24
+            hide_today_section: false
+            hide_forecast_section: true
+            hide_clock: false
+            hide_date: false
+            hourly_forecast: false
+            use_browser_time: false
+            card_mod:
+              style: |
+                ha-card {
+                  border: none;
+                }
+          - type: vertical-stack
+            cards:
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-template-card
+                    layout: vertical
+                    icon: mdi:power-plug-battery
+                    icon_color: green
+                    primary: ''
+                    fill_container: true
+                    tap_action:
+                      action: navigate
+                      navigation_path: battery
+                    hold_action:
+                      action: none
+                    double_tap_action:
+                      action: none
+                    secondary: Batteries
+                    badge_icon: ''
+                  - type: custom:mushroom-template-card
+                    layout: vertical
+                    secondary_info: none
+                    fill_container: true
+                    icon_color: accent
+                    icon: mdi:cctv
+                    primary: ''
+                    tap_action:
+                      action: navigate
+                      navigation_path: /dashboard-main/security
+                    hold_action:
+                      action: none
+                    double_tap_action:
+                      action: none
+                    secondary: Security
+                  - type: custom:mushroom-template-card
+                    entity: switch.immersion_switch
+                    icon: mdi:water-thermometer
+                    secondary: Immersion
+                    fill_container: true
+                    layout: vertical
+                    icon_color: primary
+                    tap_action:
+                      action: navigate
+                      navigation_path: immersion
+                    hold_action:
+                      action: more-info
+                  - type: custom:mushroom-template-card
+                    entity: Shopping
+                    secondary_info: none
+                    fill_container: true
+                    layout: vertical
+                    icon_color: purple
+                    icon: mdi:shopping
+                    primary: ''
+                    secondary: Shopping
+                    multiline_secondary: false
+                    tap_action:
+                      action: navigate
+                      navigation_path: /dashboard-main/shopping-list
+                    hold_action:
+                      action: none
+                    double_tap_action:
+                      action: none
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-template-card
+                    layout: vertical
+                    icon: mdi:robot-vacuum
+                    icon_color: red
+                    primary: ''
+                    fill_container: true
+                    tap_action:
+                      action: navigate
+                      navigation_path: vacuum
+                    hold_action:
+                      action: none
+                    double_tap_action:
+                      action: none
+                    secondary: Vacuum
+                    badge_icon: ''
+                  - type: custom:mushroom-template-card
+                    layout: vertical
+                    secondary_info: none
+                    fill_container: true
+                    icon_color: yellow
+                    icon: mdi:television-speaker
+                    primary: ''
+                    tap_action:
+                      action: navigate
+                      navigation_path: media
+                    hold_action:
+                      action: none
+                    double_tap_action:
+                      action: none
+                    secondary: Media
+                  - type: custom:mushroom-template-card
+                    icon: mdi:air-filter
+                    secondary: Climate
+                    fill_container: true
+                    layout: vertical
+                    icon_color: light-green
+                    tap_action:
+                      action: navigate
+                      navigation_path: climate
+                    hold_action:
+                      action: more-info
+                  - type: custom:mushroom-template-card
+                    secondary_info: none
+                    fill_container: true
+                    layout: vertical
+                    icon_color: cyan
+                    icon: mdi:shield-home
+                    primary: ''
+                    secondary: Alarm
+                    multiline_secondary: false
+                    tap_action:
+                      action: navigate
+                      navigation_path: alarm
+                    hold_action:
+                      action: none
+                    double_tap_action:
+                      action: none
+                    entity: alarm_control_panel.arcadia_alarm
+      - type: custom:gap-card
+        height: 8
+      - type: vertical-stack
+        cards:
+          - type: horizontal-stack
+            cards:
+              - type: custom:stack-in-card
+                cards:
+                  - type: custom:slider-button-card
+                    entity: light.kitchen_8
+                    slider:
+                      direction: left-right
+                      background: gradient
+                      use_state_color: true
+                      use_percentage_bg_opacity: false
+                      show_track: false
+                      toggle_on_click: false
+                      force_square: false
+                    show_name: true
+                    show_state: true
+                    compact: false
+                    icon:
+                      show: true
+                      use_state_color: true
+                      tap_action:
+                        action: navigate
+                        navigation_path: kitchen
+                      icon: ''
+                    action_button:
+                      mode: toggle
+                      icon: mdi:power
+                      show: true
+                      show_spinner: true
+                      tap_action:
+                        action: navigate
+                        navigation_path: kitchen
+                    card_mod:
+                      style: |
+                        ha-card {
+                          border: none;
+                        }
+                  - type: custom:mushroom-chips-card
+                    chips:
+                      - type: template
+                        entity: media_player.kitchen_2
+                        icon: mdi:speaker
+                        icon_color: >-
+                          {% if states('media_player.kitchen_2') == 'off' %}
+                            grey
+                          {% elif states('media_player.kitchen_2') ==
+                          'unavailable' %}
+                            grey
+                          {% else %}
+                            yellow
+                          {% endif %}
+                        card_mod:
+                          style: |
+                            ha-card {
+                              border: none;
+                            }
+                      - type: template
+                        entity: binary_sensor.refrigerator_door_open
+                        icon: >-
+                          {% if states('binary_sensor.refrigerator_door_open')
+                          == 'off' %}
+                            mdi:fridge-outline
+                          {% else %}
+                            mdi:fridge-alert-outline
+                          {% endif %}
+                        icon_color: >-
+                          {% if states('binary_sensor.refrigerator_door_open')
+                          == 'off' %}
+                            grey
+                          {% else %}
+                            yellow
+                          {% endif %}
+                        card_mod:
+                          style: |
+                            ha-card {
+                              border: none;
+                            }
+                      - type: spacer
+                      - type: template
+                        entity: sensor.living_room_aircon_room_temperature
+                        icon: mdi:thermometer
+                        icon_color: >-
+                          {% if
+                          states('sensor.living_room_aircon_room_temperature') <
+                          '25' %}
+                            blue
+                          {% else %}
+                            red
+                          {% endif %}
+                        content: >-
+                          {{
+                          states('sensor.living_room_aircon_room_temperature')
+                          }}°C
+                        card_mod:
+                          style: |
+                            ha-card {
+                              border: none;
+                            }
+              - type: custom:stack-in-card
+                cards:
+                  - type: custom:slider-button-card
+                    entity: light.living_room
+                    slider:
+                      direction: left-right
+                      background: gradient
+                      use_state_color: true
+                      use_percentage_bg_opacity: false
+                      show_track: false
+                      toggle_on_click: false
+                      force_square: false
+                    show_name: true
+                    show_state: true
+                    compact: false
+                    icon:
+                      show: true
+                      use_state_color: true
+                      tap_action:
+                        action: navigate
+                        navigation_path: ''
+                      icon: ''
+                    action_button:
+                      mode: toggle
+                      icon: mdi:power
+                      show: true
+                      show_spinner: true
+                      tap_action:
+                        action: toggle
+                    card_mod:
+                      style: |
+                        ha-card {
+                          border: none;
+                        }
+                  - type: custom:mushroom-chips-card
+                    chips:
+                      - type: template
+                        entity: climate.living_room_aircon
+                        icon: mdi:air-conditioner
+                        icon_color: >-
+                          {% if states('climate.living_room_aircon') == 'off' %}
+                            grey
+                          {% elif states('climate.living_room_aircon') == 'cool'
+                          %}
+                            blue
+                          {% elif states('climate.living_room_aircon') == 'heat'
+                          %}
+                            red
+                          {% else %}
+                            yellow
+                          {% endif %}
+                        card_mod:
+                          style: |
+                            ha-card {
+                              border: none;
+                            }
+                      - type: template
+                        icon: |-
+                          {% if states('input_boolean.fireplace') == 'off' %}
+                            mdi:fireplace-off
+                          {% else %}
+                            mdi:fireplace
+                          {% endif %}
+                        icon_color: |-
+                          {% if states('input_boolean.fireplace') == "off" %}
+                            grey
+                          {% else %}
+                            yellow
+                          {% endif %}
+                        entity: input_boolean.fireplace
+                        tap_action:
+                          action: toggle
+                        hold_action:
+                          action: more-info
+                        card_mod:
+                          style: |
+                            ha-card {
+                              border: none;
+                            }
+                      - type: spacer
+                      - type: template
+                        entity: climate.living_room_aircon
+                        icon: mdi:thermometer
+                        icon_color: >-
+                          {% if
+                          states('sensor.living_room_aircon_room_temperature') <
+                          '25' %}
+                            blue
+                          {% else %}
+                            red
+                          {% endif %}
+                        content: >-
+                          {{
+                          states('sensor.living_room_aircon_room_temperature')
+                          }}°C
+                        card_mod:
+                          style: |
+                            ha-card {
+                              border: none;
+                            }
+          - type: horizontal-stack
+            cards:
+              - type: custom:stack-in-card
+                cards:
+                  - type: custom:slider-button-card
+                    entity: light.cinema_room_2
+                    slider:
+                      direction: left-right
+                      background: gradient
+                      use_state_color: true
+                      use_percentage_bg_opacity: false
+                      show_track: false
+                      toggle_on_click: false
+                      force_square: false
+                    show_name: true
+                    show_state: true
+                    compact: false
+                    icon:
+                      show: true
+                      use_state_color: true
+                      tap_action:
+                        action: navigate
+                        navigation_path: /dashboard-main/cinema-room
+                      icon: ''
+                    action_button:
+                      mode: toggle
+                      icon: mdi:power
+                      show: true
+                      show_spinner: true
+                      tap_action:
+                        action: toggle
+                    card_mod:
+                      style: |
+                        ha-card {
+                          border: none;
+                        }
+                  - type: custom:mushroom-chips-card
+                    chips:
+                      - type: template
+                        entity: climate.cinema_aircon
+                        icon: mdi:air-conditioner
+                        icon_color: |-
+                          {% if states('climate.cinema_aircon') == 'off' %}
+                            grey
+                          {% elif states('climate.cinema_aircon') == 'cool' %}
+                            blue
+                          {% elif states('climate.cinema_aircon') == 'heat' %}
+                            red
+                          {% else %}
+                            yellow
+                          {% endif %}
+                        card_mod:
+                          style: |
+                            ha-card {
+                              border: none;
+                            }
+                      - type: template
+                        icon: |-
+                          {% if states('cover.cinema_room_blinds') == 'open' %}
+                            mdi:roller-shade
+                          {% else %}
+                            mdi:roller-shade-closed
+                          {% endif %}
+                        icon_color: |-
+                          {% if states('cover.cinema_room_blinds') == 'open' %}
+                            blue
+                          {% else %}
+                            grey
+                          {% endif %}
+                        entity: cover.cinema_room_blinds
+                        tap_action:
+                          action: toggle
+                        hold_action:
+                          action: more-info
+                        card_mod:
+                          style: |
+                            ha-card {
+                              border: none;
+                            }
+                      - type: spacer
+                      - type: template
+                        entity: sensor.cinema_aircon_room_temperature
+                        icon: mdi:thermometer
+                        icon_color: >-
+                          {% if states('sensor.cinema_aircon_room_temperature')
+                          < '25' %}
+                            blue
+                          {% else %}
+                            red
+                          {% endif %}
+                        content: >-
+                          {{ states('sensor.cinema_aircon_room_temperature')
+                          }}°C
+                        card_mod:
+                          style: |
+                            ha-card {
+                              border: none;
+                            }
+              - type: custom:stack-in-card
+                cards:
+                  - type: custom:slider-button-card
+                    entity: light.dining_room
+                    slider:
+                      direction: left-right
+                      background: gradient
+                      use_state_color: true
+                      use_percentage_bg_opacity: false
+                      show_track: false
+                      toggle_on_click: false
+                      force_square: false
+                    show_name: true
+                    show_state: true
+                    compact: false
+                    icon:
+                      show: true
+                      use_state_color: true
+                      tap_action:
+                        action: navigate
+                        navigation_path: /dashboard-main/dining-room
+                      icon: ''
+                    action_button:
+                      mode: toggle
+                      icon: mdi:power
+                      show: true
+                      show_spinner: true
+                      tap_action:
+                        action: toggle
+                    card_mod:
+                      style: |
+                        ha-card {
+                          border: none;
+                        }
+                  - type: custom:mushroom-chips-card
+                    chips:
+                      - type: template
+                        entity: vacuum.roborock_s7_maxv
+                        icon: mdi:robot-vacuum
+                        icon_color: >-
+                          {% if states('vacuum.roborock_s7_maxv') == 'docked' %}
+                            grey
+                          {% elif states('vacuum.roborock_s7_maxv') ==
+                          'cleaning' %}
+                            amber
+                          {% else %}
+                            blue
+                          {% endif %}
+                        tap_action:
+                          action: more-info
+                        card_mod:
+                          style: |
+                            ha-card {
+                              border: none;
+                            }
+                      - type: template
+                        icon: >-
+                          {% if
+                          states('binary_sensor.lumi_lumi_sensor_motion_aq2_iaszone')
+                          == 'off'
+
+                          %}
+                            mdi:motion-sensor-off
+                          {% else %}
+                            mdi:motion-sensor
+                          {% endif %}
+                        entity: binary_sensor.lumi_lumi_sensor_motion_aq2_iaszone
+                        tap_action:
+                          action: more-info
+                        card_mod:
+                          style: |
+                            ha-card {
+                              border: none;
+                            }
+                      - type: spacer
+                      - type: template
+                        entity: sensor.living_room_aircon_room_temperature
+                        icon: mdi:thermometer
+                        icon_color: >-
+                          {% if
+                          states('sensor.living_room_aircon_room_temperature') <
+                          '25' %}
+                            blue
+                          {% else %}
+                            red
+                          {% endif %}
+                        content: >-
+                          {{
+                          states('sensor.living_room_aircon_room_temperature')
+                          }}°C
+                        card_mod:
+                          style: |
+                            ha-card {
+                              border: none;
+                            }
+          - type: horizontal-stack
+            cards:
+              - type: custom:stack-in-card
+                cards:
+                  - type: custom:slider-button-card
+                    entity: light.utility_kitchen
+                    slider:
+                      direction: left-right
+                      background: gradient
+                      use_state_color: true
+                      use_percentage_bg_opacity: false
+                      show_track: false
+                      toggle_on_click: false
+                      force_square: false
+                    show_name: true
+                    show_state: true
+                    compact: false
+                    icon:
+                      show: true
+                      use_state_color: true
+                      tap_action:
+                        action: navigate
+                        navigation_path: ''
+                      icon: ''
+                    action_button:
+                      mode: toggle
+                      icon: mdi:power
+                      show: true
+                      show_spinner: true
+                      tap_action:
+                        action: toggle
+                    card_mod:
+                      style: |
+                        ha-card {
+                          border: none;
+                        }
+                  - type: custom:mushroom-chips-card
+                    chips:
+                      - type: template
+                        icon: >-
+                          {% if
+                          states('binary_sensor.lumi_lumi_sensor_motion_aq2_iaszone')
+                          == 'off'
+
+                          %}
+                            mdi:motion-sensor-off
+                          {% else %}
+                            mdi:motion-sensor
+                          {% endif %}
+                        entity: binary_sensor.lumi_lumi_sensor_motion_aq2_iaszone
+                        tap_action:
+                          action: more-info
+                        card_mod:
+                          style: |
+                            ha-card {
+                              border: none;
+                            }
+              - type: custom:stack-in-card
+                cards:
+                  - type: custom:slider-button-card
+                    entity: input_boolean.office_mode
+                    name: Office
+                    slider:
+                      direction: left-right
+                      background: gradient
+                      use_state_color: true
+                      use_percentage_bg_opacity: false
+                      show_track: false
+                      toggle_on_click: false
+                      force_square: false
+                    show_name: true
+                    show_state: true
+                    compact: false
+                    icon:
+                      show: true
+                      use_state_color: true
+                      tap_action:
+                        action: navigate
+                        navigation_path: ''
+                      icon: ''
+                    action_button:
+                      mode: toggle
+                      icon: mdi:power
+                      show: true
+                      show_spinner: true
+                      tap_action:
+                        action: toggle
+                    card_mod:
+                      style: |
+                        ha-card {
+                          border: none;
+                        }
+                  - type: custom:mushroom-chips-card
+                    chips:
+                      - type: template
+                        entity: input_boolean.office_mode
+                        icon: mdi:moon-waning-crescent
+                        icon_color: purple
+                        tap_action:
+                          action: toggle
+                        hold_action:
+                          action: more-info
+                        card_mod:
+                          style: |
+                            ha-card {
+                              border: none;
+                            }
+                      - type: template
+                        entity: sensor.epson_wf_3520_series
+                        icon: mdi:printer
+                        icon_color: >-
+                          {% if is_state('sensor.epson_wf_3520_series','idle')
+                          %}
+                            grey
+                          {% else %}
+                            yellow
+                          {% endif %}
+                        tap_action:
+                          action: none
+                        card_mod:
+                          style: |
+                            ha-card {
+                              border: none;
+                            }
+          - type: horizontal-stack
+            cards:
+              - show_name: false
+                show_icon: true
+                type: button
+                tap_action:
+                  action: navigate
+                  navigation_path: rooms
+                theme: No Borders Daniyal
+                icon: mdi:arrow-down
+                icon_height: 20px
+  - icon: mdi:account-group
+    subview: true
+    path: People-status
+    theme: No Borders Daniyal
+    visible:
+      - user: a189ea3f02f9459f937fb565400bc7f2
+      - user: 30bb27433ba44e5fb06176192c039cc7
+      - user: 0ab4432c64a84087818806c4ba2963f6
+      - user: 8ca2ce7c2b6e40b2a4ca218415631032
+    type: custom:vertical-layout
+    badges: []
+    cards:
+      - type: horizontal-stack
+        cards:
+          - type: custom:swipe-card
+            cards:
+              - type: custom:stack-in-card
+                cards:
+                  - type: custom:mushroom-person-card
+                    entity: person.ammi
+                    icon_type: entity-picture
+                    tap_action:
+                      action: more-info
+                    double_tap_action:
+                      action: none
+                    hold_action:
+                      action: none
+                    secondary_info: state
+                    layout: horizontal
+                    primary_info: name
+                    fill_container: true
+                  - type: custom:mushroom-chips-card
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --chip-font-size: 0.3em;
+                          --chip-icon-size: 0.5em;
+                          --chip-border-width: 0;
+                          --chip-box-shadow: none;
+                          --chip-background: none;
+                          --chip-border: none;
+                          --chip-spacing: none;
+                          --chip-font-weight: bold;
+                        }
+                    chips:
+                      - type: template
+                        entity: sensor.tusleem_s_iphone_battery_level
+                        icon: >-
+                          {% set battery =
+                          states('sensor.tusleem_s_iphone_battery_level')|int %}
+
+                          {% if battery < 20 %}
+                            mdi:battery-10
+                          {% elif battery < 40 %}
+                            mdi:battery-30
+                          {% elif battery < 60 %}
+                            mdi:battery-50
+                          {% elif battery < 80 %}
+                            mdi:battery-70
+                          {% elif battery >= 80 %}
+                            mdi:battery-90
+                          {% else %}
+                            mdi:battery-unknown
+                          {% endif %}
+                        icon_color: >-
+                          {% set battery =
+                          states('sensor.tusleem_s_iphone_battery_level')|int %}
+                          {% if battery < 20 %}
+                            red
+                          {% elif battery < 40 %}
+                            orange
+                          {% elif battery < 60 %}
+                            amber
+                          {% elif battery < 80 %}
+                            green
+                          {% elif battery >= 80 %}
+                            green
+                          {% else %}
+                            blue
+                          {% endif %}
+                        content: '{{states(''sensor.tusleem_s_iphone_battery_level'')}}%'
+                        tap_action:
+                          action: more-info
+                      - type: template
+                        entity: sensor.tusleem_s_iphone_battery_level
+                        icon: >-
+                          {% if
+                          is_state('sensor.tusleem_s_iphone_battery_state','Charging')%}mdi:power-plug
+                          {% else %} mdi:power-plug-off {% endif
+                          %}                  
+                        icon_color: >-
+                          {% if
+                          is_state('sensor.tusleem_s_iphone_battery_state','Charging')%}blue
+
+                          {% else %} grey
+
+                          {% endif %}
+                        content: ''
+                        tap_action:
+                          action: none
+                      - type: template
+                        entity: sensor.daniyals_iphone_connection_type
+                        icon: >-
+                          {% if
+                          is_state('sensor.tusleem_s_iphone_connection_type','Wi-Fi')%}
+                            mdi:wifi 
+                          {% elif
+                          is_state('sensor.tusleem_s_iphone_connection_type','Cellular')%}
+                            mdi:signal-4g
+                          {% else %} 
+                            mdi:network-strength-off
+                          {% endif %}  
+                        icon_color: >-
+                          {% if
+                          is_state('sensor.tusleem_s_iphone_connection_type','Wi-Fi')%}
+                           green
+                          {% elif
+                          is_state('sensor.tusleem_s_iphone_connection_type','Cellular')%}
+                           red
+                          {% else %} grey
+
+                          {% endif %}   
+                        content: ''
+                        hold_action:
+                          action: none
+                        double_tap_action:
+                          action: none
+                        tap_action:
+                          action: none
+                    alignment: center
+                  - type: custom:mushroom-chips-card
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --chip-font-size: 0.28em;
+                          --chip-icon-size: 0.4em;
+                          --chip-border-width: 0;
+                          --chip-box-shadow: none;
+                          --chip-background: none;
+                          --chip-border: none;
+                          --chip-font-weight: normal;
+                        }
+                    alignment: justify
+                    chips:
+                      - type: entity
+                        entity: device_tracker.tusleem_s_iphone
+                        content_info: last-updated
+                        icon: mdi:clock
+                        icon_color: grey
+                        tap_action:
+                          action: more-info
+                      - type: entity
+                        entity: sensor.daniyals_iphone_proximity
+                        content_info: state
+                        icon: mdi:map-marker-right-outline
+                        icon_color: grey
+                        tap_action:
+                          action: more-info
+              - type: custom:stack-in-card
+                mode: vertical
+                keep:
+                  margin: true
+                  outer-padding: false
+                cards:
+                  - type: custom:mushroom-template-card
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --font-size: 0.32em;
+                          --icon-size: 0.52em;
+                          --border-width: 0;
+                          --box-shadow: none;
+                          --background: none;
+                          --border: none;
+                          --spacing: 0.5em;
+                          --font-weight: normal;
+                        }
+                    primary: ''
+                    secondary: 'WiFi: {{states(''sensor.daniyals_iphone_wifi_connection'')}}'
+                    icon: ''
+                    entity: sensor.daniyals_iphone_wifi_connection
+                    layout: vertical
+                    double_tap_action:
+                      action: none
+                    hold_action:
+                      action: none
+                    tap_action:
+                      action: more-info
+                  - type: custom:mushroom-chips-card
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --chip-font-size: 0.32em;
+                          --chip-icon-size: 0.52em;
+                          --chip-border-width: 0;
+                          --chip-box-shadow: none;
+                          --chip-background: none;
+                          --chip-border: none;
+                          --chip-spacing: none;
+                          --chip-font-weight: normal;
+                        }
+                    chips:
+                      - type: entity
+                        entity: sensor.daniyals_iphone_detected_activity
+                        icon_color: teal
+                        double_tap_action:
+                          action: none
+                        hold_action:
+                          action: none
+                        tap_action:
+                          action: more-info
+                      - type: entity
+                        entity: automation.a_on_state
+                        icon_color: red
+                        icon: mdi:cellphone-wireless
+                        use_entity_picture: false
+                        content_info: none
+                        tap_action:
+                          action: call-service
+                          service: script.daniyals_iphone_find_phone
+                          data: {}
+                          target: {}
+                        hold_action:
+                          action: none
+                        double_tap_action:
+                          action: none
+                    alignment: center
+                  - type: custom:mushroom-entity-card
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --font-size: 0.2em;
+                          --icon-size: 0.5em;
+                          --border-width: 0;
+                          --box-shadow: none;
+                          --background: none;
+                          --border: none;
+                          --spacing: none;
+                          --font-weight: normal;
+                        }
+                    entity: sensor.daniyals_iphone_geo_1
+                    icon_type: none
+                    primary_info: ''
+                    name: 'Possible Location:'
+                    layout: vertical
+                    fill_container: true
+                    double_tap_action:
+                      action: none
+                    hold_action:
+                      action: none
+                    tap_action:
+                      action: more-info
+                  - type: custom:mushroom-entity-card
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --font-size: 0.2em;
+                          --icon-size: 0.5em;
+                          --border-width: 0;
+                          --box-shadow: none;
+                          --background: none;
+                          --border: none;
+                          --spacing: none;
+                          --font-weight: normal;
+                        }
+                    entity: sensor.daniyals_iphone_geo_2
+                    icon_type: none
+                    primary_info: ''
+                    name: 'Possible Location:'
+                    layout: vertical
+                    fill_container: true
+                    double_tap_action:
+                      action: none
+                    hold_action:
+                      action: none
+                    tap_action:
+                      action: more-info
+              - type: custom:stack-in-card
+                mode: vertical
+                keep:
+                  margin: true
+                  outer-padding: true
+                cards:
+                  - type: custom:mushroom-template-card
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --font-size: 0.3em;
+                          --icon-size: 0.5em;
+                          --border-width: 0;
+                          --box-shadow: none;
+                          --background: none;
+                          --border: none;
+                          --spacing: 0.5em;
+                          --font-weight: normal;
+                        }
+                    primary: ''
+                    secondary: 'other info:'
+                    icon: ''
+                    entity: sensor.karam_wifi_connection
+                    layout: vertical
+                    double_tap_action:
+                      action: none
+                    hold_action:
+                      action: none
+                    tap_action:
+                      action: more-info
+                  - type: custom:mushroom-chips-card
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --chip-font-size: 0.32em;
+                          --chip-icon-size: 0.52em;
+                          --chip-border-width: 0;
+                          --chip-box-shadow: none;
+                          --chip-background: none;
+                          --chip-border: none;
+                          --chip-spacing: none;
+                          --chip-font-weight: normal;
+                        }
+                    chips:
+                      - type: entity
+                        entity: sensor.daniyals_iphone_public_ip_address
+                        icon_color: teal
+                        double_tap_action:
+                          action: none
+                        hold_action:
+                          action: none
+                        tap_action:
+                          action: more-info
+                    alignment: center
+                  - type: custom:mushroom-chips-card
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --chip-font-size: 0.32em;
+                          --chip-icon-size: 0.52em;
+                          --chip-border-width: 0;
+                          --chip-box-shadow: none;
+                          --chip-background: none;
+                          --chip-border: none;
+                          --chip-spacing: none;
+                          --chip-font-weight: normal;
+                        }
+                    chips:
+                      - type: entity
+                        entity: sensor.daniyals_iphone_last_reboot
+                        icon_color: teal
+                        double_tap_action:
+                          action: none
+                        hold_action:
+                          action: none
+                        tap_action:
+                          action: more-info
+                    alignment: center
+          - type: custom:swipe-card
+            cards:
+              - type: custom:stack-in-card
+                cards:
+                  - type: custom:mushroom-person-card
+                    entity: person.abbu
+                    icon_type: entity-picture
+                    tap_action:
+                      action: more-info
+                    double_tap_action:
+                      action: none
+                    hold_action:
+                      action: none
+                    secondary_info: state
+                    layout: horizontal
+                    primary_info: name
+                    fill_container: true
+                  - type: custom:mushroom-chips-card
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --chip-font-size: 0.3em;
+                          --chip-icon-size: 0.5em;
+                          --chip-border-width: 0;
+                          --chip-box-shadow: none;
+                          --chip-background: none;
+                          --chip-border: none;
+                          --chip-spacing: none;
+                          --chip-font-weight: bold;
+                        }
+                    chips:
+                      - type: template
+                        entity: sensor.iphone8_5s_battery_level
+                        icon: >-
+                          {% set battery =
+                          states('sensor.iphone8_5s_battery_level')|int %}
+
+                          {% if battery < 20 %}
+                            mdi:battery-10
+                          {% elif battery < 40 %}
+                            mdi:battery-30
+                          {% elif battery < 60 %}
+                            mdi:battery-50
+                          {% elif battery < 80 %}
+                            mdi:battery-70
+                          {% elif battery >= 80 %}
+                            mdi:battery-90
+                          {% else %}
+                            mdi:battery-unknown
+                          {% endif %}
+                        icon_color: >-
+                          {% set battery =
+                          states('sensor.iphone8_5s_battery_level')|int %} {% if
+                          battery < 20 %}
+                            red
+                          {% elif battery < 40 %}
+                            orange
+                          {% elif battery < 60 %}
+                            amber
+                          {% elif battery < 80 %}
+                            green
+                          {% elif battery >= 80 %}
+                            green
+                          {% else %}
+                            blue
+                          {% endif %}
+                        content: '{{states(''sensor.iphone8_5s_battery_level'')}}%'
+                        tap_action:
+                          action: more-info
+                      - type: template
+                        entity: sensor.iphone8_5s_battery_level
+                        icon: >-
+                          {% if
+                          is_state('sensor.iphone8_5s_battery_state','Charging')%}mdi:power-plug
+                          {% else %} mdi:power-plug-off {% endif
+                          %}                  
+                        icon_color: >-
+                          {% if
+                          is_state('sensor.iphone8_5s_battery_state','Charging')%}blue
+
+                          {% else %} grey
+
+                          {% endif %}
+                        content: ''
+                        tap_action:
+                          action: none
+                      - type: template
+                        entity: sensor.iphone8_5s_connection_type
+                        icon: >-
+                          {% if
+                          is_state('sensor.iphone8_5s_connection_type','Wi-Fi')%}
+                            mdi:wifi 
+                          {% elif
+                          is_state('sensor.anaiahs_iphone_connection_type','Cellular')%}
+                            mdi:signal-4g
+                          {% else %} mdi:network-strength-off
+
+                          {% endif %}  
+                        icon_color: >-
+                          {% if
+                          is_state('sensor.anaiahs_iphone_connection_type','Wi-Fi')%}
+                           green
+                          {% elif
+                          is_state('sensor.anaiahs_iphone_connection_type','Cellular')%}
+                           red
+                          {% else %} grey
+
+                          {% endif %}   
+                        content: ''
+                        hold_action:
+                          action: none
+                        double_tap_action:
+                          action: none
+                        tap_action:
+                          action: none
+                    alignment: center
+                  - type: custom:mushroom-chips-card
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --chip-font-size: 0.28em;
+                          --chip-icon-size: 0.4em;
+                          --chip-border-width: 0;
+                          --chip-box-shadow: none;
+                          --chip-background: none;
+                          --chip-border: none;
+                          --chip-font-weight: normal;
+                        }
+                    alignment: justify
+                    chips:
+                      - type: entity
+                        entity: device_tracker.iphone8_5s
+                        content_info: last-updated
+                        icon: mdi:clock
+                        icon_color: grey
+                        tap_action:
+                          action: more-info
+                      - type: entity
+                        entity: sensor.anaiahs_iphone_proximity
+                        content_info: state
+                        icon: mdi:map-marker-right-outline
+                        icon_color: grey
+                        tap_action:
+                          action: more-info
+              - type: custom:stack-in-card
+                mode: vertical
+                keep:
+                  margin: true
+                  outer-padding: false
+                cards:
+                  - type: custom:mushroom-template-card
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --font-size: 0.32em;
+                          --icon-size: 0.52em;
+                          --border-width: 0;
+                          --box-shadow: none;
+                          --background: none;
+                          --border: none;
+                          --spacing: 0.5em;
+                          --font-weight: normal;
+                        }
+                    primary: ''
+                    secondary: 'WiFi: {{states(''sensor.anaiahs_iphone_wifi_connection'')}}'
+                    icon: ''
+                    entity: sensor.anaiahs_iphone_wifi_connection
+                    layout: vertical
+                    double_tap_action:
+                      action: none
+                    hold_action:
+                      action: none
+                    tap_action:
+                      action: more-info
+                  - type: custom:mushroom-chips-card
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --chip-font-size: 0.32em;
+                          --chip-icon-size: 0.52em;
+                          --chip-border-width: 0;
+                          --chip-box-shadow: none;
+                          --chip-background: none;
+                          --chip-border: none;
+                          --chip-spacing: none;
+                          --chip-font-weight: normal;
+                        }
+                    chips:
+                      - type: entity
+                        entity: sensor.anaiahs_iphone_detected_activity
+                        icon_color: teal
+                        double_tap_action:
+                          action: none
+                        hold_action:
+                          action: none
+                        tap_action:
+                          action: more-info
+                      - type: entity
+                        entity: automation.a_on_state
+                        icon_color: red
+                        icon: mdi:cellphone-wireless
+                        use_entity_picture: false
+                        content_info: none
+                        tap_action:
+                          action: call-service
+                          service: script.anaiahs_iphone_find_phone
+                          data: {}
+                          target: {}
+                        hold_action:
+                          action: none
+                        double_tap_action:
+                          action: none
+                    alignment: center
+                  - type: custom:mushroom-entity-card
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --font-size: 0.2em;
+                          --icon-size: 0.5em;
+                          --border-width: 0;
+                          --box-shadow: none;
+                          --background: none;
+                          --border: none;
+                          --spacing: none;
+                          --font-weight: normal;
+                        }
+                    entity: sensor.anaiahs_iphone_geo_1
+                    icon_type: none
+                    primary_info: ''
+                    name: 'Possible Location:'
+                    layout: vertical
+                    fill_container: true
+                    double_tap_action:
+                      action: none
+                    hold_action:
+                      action: none
+                    tap_action:
+                      action: more-info
+                  - type: custom:mushroom-entity-card
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --font-size: 0.2em;
+                          --icon-size: 0.5em;
+                          --border-width: 0;
+                          --box-shadow: none;
+                          --background: none;
+                          --border: none;
+                          --spacing: none;
+                          --font-weight: normal;
+                        }
+                    entity: sensor.anaiahs_iphone_geo_2
+                    icon_type: none
+                    primary_info: ''
+                    name: 'Possible Location:'
+                    layout: vertical
+                    fill_container: true
+                    double_tap_action:
+                      action: none
+                    hold_action:
+                      action: none
+                    tap_action:
+                      action: more-info
+              - type: custom:stack-in-card
+                mode: vertical
+                keep:
+                  margin: true
+                  outer-padding: true
+                cards:
+                  - type: custom:mushroom-template-card
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --font-size: 0.3em;
+                          --icon-size: 0.5em;
+                          --border-width: 0;
+                          --box-shadow: none;
+                          --background: none;
+                          --border: none;
+                          --spacing: 0.5em;
+                          --font-weight: normal;
+                        }
+                    primary: ''
+                    secondary: 'other info:'
+                    icon: ''
+                    entity: sensor.karam_wifi_connection
+                    layout: vertical
+                    double_tap_action:
+                      action: none
+                    hold_action:
+                      action: none
+                    tap_action:
+                      action: more-info
+                  - type: custom:mushroom-chips-card
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --chip-font-size: 0.32em;
+                          --chip-icon-size: 0.52em;
+                          --chip-border-width: 0;
+                          --chip-box-shadow: none;
+                          --chip-background: none;
+                          --chip-border: none;
+                          --chip-spacing: none;
+                          --chip-font-weight: normal;
+                        }
+                    chips:
+                      - type: entity
+                        entity: sensor.anaiahs_iphone_public_ip_address
+                        icon_color: teal
+                        double_tap_action:
+                          action: none
+                        hold_action:
+                          action: none
+                        tap_action:
+                          action: more-info
+                    alignment: center
+                  - type: custom:mushroom-chips-card
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --chip-font-size: 0.32em;
+                          --chip-icon-size: 0.52em;
+                          --chip-border-width: 0;
+                          --chip-box-shadow: none;
+                          --chip-background: none;
+                          --chip-border: none;
+                          --chip-spacing: none;
+                          --chip-font-weight: normal;
+                        }
+                    chips:
+                      - type: entity
+                        entity: sensor.anaiahs_iphone_last_reboot
+                        icon_color: teal
+                        double_tap_action:
+                          action: none
+                        hold_action:
+                          action: none
+                        tap_action:
+                          action: more-info
+                    alignment: center
+      - type: horizontal-stack
+        cards:
+          - type: custom:swipe-card
+            cards:
+              - type: custom:stack-in-card
+                cards:
+                  - type: custom:mushroom-person-card
+                    entity: person.daniyal
+                    icon_type: entity-picture
+                    tap_action:
+                      action: more-info
+                    double_tap_action:
+                      action: none
+                    hold_action:
+                      action: none
+                    secondary_info: state
+                    layout: horizontal
+                    primary_info: name
+                    fill_container: true
+                  - type: custom:mushroom-chips-card
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --chip-font-size: 0.3em;
+                          --chip-icon-size: 0.5em;
+                          --chip-border-width: 0;
+                          --chip-box-shadow: none;
+                          --chip-background: none;
+                          --chip-border: none;
+                          --chip-spacing: none;
+                          --chip-font-weight: bold;
+                        }
+                    chips:
+                      - type: template
+                        entity: sensor.daniyals_iphone_battery_level
+                        icon: >-
+                          {% set battery =
+                          states('sensor.daniyals_iphone_battery_level')|int %}
+
+                          {% if battery < 20 %}
+                            mdi:battery-10
+                          {% elif battery < 40 %}
+                            mdi:battery-30
+                          {% elif battery < 60 %}
+                            mdi:battery-50
+                          {% elif battery < 80 %}
+                            mdi:battery-70
+                          {% elif battery >= 80 %}
+                            mdi:battery-90
+                          {% else %}
+                            mdi:battery-unknown
+                          {% endif %}
+                        icon_color: >-
+                          {% set battery =
+                          states('sensor.daniyals_iphone_battery_level')|int %}
+                          {% if battery < 20 %}
+                            red
+                          {% elif battery < 40 %}
+                            orange
+                          {% elif battery < 60 %}
+                            amber
+                          {% elif battery < 80 %}
+                            green
+                          {% elif battery >= 80 %}
+                            green
+                          {% else %}
+                            blue
+                          {% endif %}
+                        content: '{{states(''sensor.daniyals_iphone_battery_level'')}}%'
+                        tap_action:
+                          action: more-info
+                      - type: template
+                        entity: sensor.daniyals_iphone_battery_level
+                        icon: >-
+                          {% if
+                          is_state('sensor.daniyals_iphone_battery_state','Charging')%}mdi:power-plug
+                          {% else %} mdi:power-plug-off {% endif
+                          %}                  
+                        icon_color: >-
+                          {% if
+                          is_state('sensor.daniyals_iphone_battery_state','Charging')%}blue
+
+                          {% else %} grey
+
+                          {% endif %}
+                        content: ''
+                        tap_action:
+                          action: none
+                      - type: template
+                        entity: sensor.daniyals_iphone_connection_type
+                        icon: >-
+                          {% if
+                          is_state('sensor.daniyals_iphone_connection_type','Wi-Fi')%}
+                            mdi:wifi 
+                          {% elif
+                          is_state('sensor.daniyals_iphone_connection_type','Cellular')%}
+                            mdi:signal-4g
+                          {% else %} 
+                            mdi:network-strength-off
+                          {% endif %}  
+                        icon_color: >-
+                          {% if
+                          is_state('sensor.daniyals_iphone_connection_type','Wi-Fi')%}
+                           green
+                          {% elif
+                          is_state('sensor.daniyals_iphone_connection_type','Cellular')%}
+                           red
+                          {% else %} grey
+
+                          {% endif %}   
+                        content: ''
+                        hold_action:
+                          action: none
+                        double_tap_action:
+                          action: none
+                        tap_action:
+                          action: none
+                    alignment: center
+                  - type: custom:mushroom-chips-card
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --chip-font-size: 0.28em;
+                          --chip-icon-size: 0.4em;
+                          --chip-border-width: 0;
+                          --chip-box-shadow: none;
+                          --chip-background: none;
+                          --chip-border: none;
+                          --chip-font-weight: normal;
+                        }
+                    alignment: justify
+                    chips:
+                      - type: entity
+                        entity: device_tracker.daniyals_iphone
+                        content_info: last-updated
+                        icon: mdi:clock
+                        icon_color: grey
+                        tap_action:
+                          action: more-info
+              - type: custom:stack-in-card
+                mode: vertical
+                keep:
+                  margin: true
+                  outer-padding: false
+                cards:
+                  - type: custom:mushroom-template-card
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --font-size: 0.32em;
+                          --icon-size: 0.52em;
+                          --border-width: 0;
+                          --box-shadow: none;
+                          --background: none;
+                          --border: none;
+                          --spacing: 0.5em;
+                          --font-weight: normal;
+                        }
+                    primary: ''
+                    secondary: iPad Air
+                    icon: ''
+                    entity: device_tracker.daniyals_ipad_air
+                    layout: vertical
+                    double_tap_action:
+                      action: none
+                    hold_action:
+                      action: none
+                    tap_action:
+                      action: more-info
+                  - type: custom:mushroom-chips-card
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --chip-font-size: 0.32em;
+                          --chip-icon-size: 0.52em;
+                          --chip-border-width: 0;
+                          --chip-box-shadow: none;
+                          --chip-background: none;
+                          --chip-border: none;
+                          --chip-spacing: none;
+                          --chip-font-weight: normal;
+                        }
+                    chips:
+                      - type: template
+                        entity: sensor.daniyals_ipad_air_battery_level
+                        icon: >-
+                          {% set battery =
+                          states('sensor.daniyals_ipad_air_battery_level')|int
+                          %}
+
+                          {% if battery < 20 %}
+                            mdi:battery-10
+                          {% elif battery < 40 %}
+                            mdi:battery-30
+                          {% elif battery < 60 %}
+                            mdi:battery-50
+                          {% elif battery < 80 %}
+                            mdi:battery-70
+                          {% elif battery >= 80 %}
+                            mdi:battery-90
+                          {% else %}
+                            mdi:battery-unknown
+                          {% endif %}
+                        icon_color: >-
+                          {% set battery =
+                          states('sensor.daniyals_ipad_air_battery_level')|int
+                          %} {% if battery < 20 %}
+                            red
+                          {% elif battery < 40 %}
+                            orange
+                          {% elif battery < 60 %}
+                            amber
+                          {% elif battery < 80 %}
+                            green
+                          {% elif battery >= 80 %}
+                            green
+                          {% else %}
+                            blue
+                          {% endif %}
+                        content: '{{states(''sensor.daniyals_ipad_air_battery_level'')}}%'
+                        tap_action:
+                          action: more-info
+                      - type: template
+                        entity: sensor.daniyals_iphone_battery_level
+                        icon: >-
+                          {% if
+                          is_state('sensor.daniyals_ipad_air_battery_state','Charging')%}mdi:power-plug
+                          {% else %} mdi:power-plug-off {% endif
+                          %}                  
+                        icon_color: >-
+                          {% if
+                          is_state('sensor.daniyals_ipad_air_battery_state','Charging')%}blue
+
+                          {% else %} grey
+
+                          {% endif %}
+                        content: ''
+                        tap_action:
+                          action: none
+                      - type: template
+                        entity: sensor.daniyals_iphone_connection_type
+                        icon: >-
+                          {% if
+                          is_state('sensor.daniyals_ipad_air_connection_type','Wi-Fi')%}
+                            mdi:wifi 
+                          {% elif
+                          is_state('sensor.daniyals_ipad_air_connection_type','Not
+                          Connected')%}
+                            mdi:wifi-off
+                          {% else %} 
+                            mdi:wifi-alert
+                          {% endif %}  
+                        icon_color: >-
+                          {% if
+                          is_state('sensor.daniyals_ipad_air_connection_type','Wi-Fi')%}
+                            green
+                          {% elif
+                          is_state('sensor.daniyals_ipad_air_connection_type','Not
+                          Connected')%}
+                            red
+                          {% else %} 
+                            grey
+                          {% endif %}   
+                        content: ''
+                        hold_action:
+                          action: none
+                        double_tap_action:
+                          action: none
+                        tap_action:
+                          action: none
+                    alignment: center
+          - type: custom:swipe-card
+            cards:
+              - type: custom:stack-in-card
+                cards:
+                  - type: custom:mushroom-person-card
+                    entity: person.anaiah
+                    icon_type: entity-picture
+                    tap_action:
+                      action: more-info
+                    double_tap_action:
+                      action: none
+                    hold_action:
+                      action: none
+                    secondary_info: state
+                    layout: horizontal
+                    primary_info: name
+                    fill_container: true
+                  - type: custom:mushroom-chips-card
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --chip-font-size: 0.3em;
+                          --chip-icon-size: 0.5em;
+                          --chip-border-width: 0;
+                          --chip-box-shadow: none;
+                          --chip-background: none;
+                          --chip-border: none;
+                          --chip-spacing: none;
+                          --chip-font-weight: bold;
+                        }
+                    chips:
+                      - type: template
+                        entity: sensor.anaiahs_iphone_battery_level
+                        icon: >-
+                          {% set battery =
+                          states('sensor.anaiahs_iphone_battery_level')|int %}
+
+                          {% if battery < 20 %}
+                            mdi:battery-10
+                          {% elif battery < 40 %}
+                            mdi:battery-30
+                          {% elif battery < 60 %}
+                            mdi:battery-50
+                          {% elif battery < 80 %}
+                            mdi:battery-70
+                          {% elif battery >= 80 %}
+                            mdi:battery-90
+                          {% else %}
+                            mdi:battery-unknown
+                          {% endif %}
+                        icon_color: >-
+                          {% set battery =
+                          states('sensor.anaiahs_iphone_battery_level')|int %}
+                          {% if battery < 20 %}
+                            red
+                          {% elif battery < 40 %}
+                            orange
+                          {% elif battery < 60 %}
+                            amber
+                          {% elif battery < 80 %}
+                            green
+                          {% elif battery >= 80 %}
+                            green
+                          {% else %}
+                            blue
+                          {% endif %}
+                        content: '{{states(''sensor.anaiahs_iphone_battery_level'')}}%'
+                        tap_action:
+                          action: more-info
+                      - type: template
+                        entity: sensor.anaiahs_iphone_battery_level
+                        icon: >-
+                          {% if
+                          is_state('sensor.anaiahs_iphone_battery_state','Charging')%}mdi:power-plug
+                          {% else %} mdi:power-plug-off {% endif
+                          %}                  
+                        icon_color: >-
+                          {% if
+                          is_state('sensor.anaiahs_iphone_battery_state','Charging')%}blue
+
+                          {% else %} grey
+
+                          {% endif %}
+                        content: ''
+                        tap_action:
+                          action: none
+                      - type: template
+                        entity: sensor.anaiahs_iphone_connection_type
+                        icon: >-
+                          {% if
+                          is_state('sensor.anaiahs_iphone_connection_type','Wi-Fi')%}
+                            mdi:wifi 
+                          {% elif
+                          is_state('sensor.anaiahs_iphone_connection_type','Cellular')%}
+                            mdi:signal-4g
+                          {% else %} mdi:network-strength-off
+
+                          {% endif %}  
+                        icon_color: >-
+                          {% if
+                          is_state('sensor.anaiahs_iphone_connection_type','Wi-Fi')%}
+                           green
+                          {% elif
+                          is_state('sensor.anaiahs_iphone_connection_type','Cellular')%}
+                           red
+                          {% else %} grey
+
+                          {% endif %}   
+                        content: ''
+                        hold_action:
+                          action: none
+                        double_tap_action:
+                          action: none
+                        tap_action:
+                          action: none
+                    alignment: center
+                  - type: custom:mushroom-chips-card
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --chip-font-size: 0.28em;
+                          --chip-icon-size: 0.4em;
+                          --chip-border-width: 0;
+                          --chip-box-shadow: none;
+                          --chip-background: none;
+                          --chip-border: none;
+                          --chip-font-weight: normal;
+                        }
+                    alignment: justify
+                    chips:
+                      - type: entity
+                        entity: device_tracker.anaiahs_iphone
+                        content_info: last-updated
+                        icon: mdi:clock
+                        icon_color: grey
+                        tap_action:
+                          action: more-info
+                      - type: entity
+                        entity: sensor.anaiahs_iphone_proximity
+                        content_info: state
+                        icon: mdi:map-marker-right-outline
+                        icon_color: grey
+                        tap_action:
+                          action: more-info
+              - type: custom:stack-in-card
+                mode: vertical
+                keep:
+                  margin: true
+                  outer-padding: false
+                cards:
+                  - type: custom:mushroom-template-card
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --font-size: 0.32em;
+                          --icon-size: 0.52em;
+                          --border-width: 0;
+                          --box-shadow: none;
+                          --background: none;
+                          --border: none;
+                          --spacing: 0.5em;
+                          --font-weight: normal;
+                        }
+                    primary: ''
+                    secondary: 'WiFi: {{states(''sensor.anaiahs_iphone_wifi_connection'')}}'
+                    icon: ''
+                    entity: sensor.anaiahs_iphone_wifi_connection
+                    layout: vertical
+                    double_tap_action:
+                      action: none
+                    hold_action:
+                      action: none
+                    tap_action:
+                      action: more-info
+                  - type: custom:mushroom-chips-card
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --chip-font-size: 0.32em;
+                          --chip-icon-size: 0.52em;
+                          --chip-border-width: 0;
+                          --chip-box-shadow: none;
+                          --chip-background: none;
+                          --chip-border: none;
+                          --chip-spacing: none;
+                          --chip-font-weight: normal;
+                        }
+                    chips:
+                      - type: entity
+                        entity: sensor.anaiahs_iphone_detected_activity
+                        icon_color: teal
+                        double_tap_action:
+                          action: none
+                        hold_action:
+                          action: none
+                        tap_action:
+                          action: more-info
+                      - type: entity
+                        entity: automation.a_on_state
+                        icon_color: red
+                        icon: mdi:cellphone-wireless
+                        use_entity_picture: false
+                        content_info: none
+                        tap_action:
+                          action: call-service
+                          service: script.anaiahs_iphone_find_phone
+                          data: {}
+                          target: {}
+                        hold_action:
+                          action: none
+                        double_tap_action:
+                          action: none
+                    alignment: center
+                  - type: custom:mushroom-entity-card
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --font-size: 0.2em;
+                          --icon-size: 0.5em;
+                          --border-width: 0;
+                          --box-shadow: none;
+                          --background: none;
+                          --border: none;
+                          --spacing: none;
+                          --font-weight: normal;
+                        }
+                    entity: sensor.anaiahs_iphone_geo_1
+                    icon_type: none
+                    primary_info: ''
+                    name: 'Possible Location:'
+                    layout: vertical
+                    fill_container: true
+                    double_tap_action:
+                      action: none
+                    hold_action:
+                      action: none
+                    tap_action:
+                      action: more-info
+                  - type: custom:mushroom-entity-card
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --font-size: 0.2em;
+                          --icon-size: 0.5em;
+                          --border-width: 0;
+                          --box-shadow: none;
+                          --background: none;
+                          --border: none;
+                          --spacing: none;
+                          --font-weight: normal;
+                        }
+                    entity: sensor.anaiahs_iphone_geo_2
+                    icon_type: none
+                    primary_info: ''
+                    name: 'Possible Location:'
+                    layout: vertical
+                    fill_container: true
+                    double_tap_action:
+                      action: none
+                    hold_action:
+                      action: none
+                    tap_action:
+                      action: more-info
+              - type: custom:stack-in-card
+                mode: vertical
+                keep:
+                  margin: true
+                  outer-padding: true
+                cards:
+                  - type: custom:mushroom-template-card
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --font-size: 0.3em;
+                          --icon-size: 0.5em;
+                          --border-width: 0;
+                          --box-shadow: none;
+                          --background: none;
+                          --border: none;
+                          --spacing: 0.5em;
+                          --font-weight: normal;
+                        }
+                    primary: ''
+                    secondary: 'other info:'
+                    icon: ''
+                    entity: sensor.karam_wifi_connection
+                    layout: vertical
+                    double_tap_action:
+                      action: none
+                    hold_action:
+                      action: none
+                    tap_action:
+                      action: more-info
+                  - type: custom:mushroom-chips-card
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --chip-font-size: 0.32em;
+                          --chip-icon-size: 0.52em;
+                          --chip-border-width: 0;
+                          --chip-box-shadow: none;
+                          --chip-background: none;
+                          --chip-border: none;
+                          --chip-spacing: none;
+                          --chip-font-weight: normal;
+                        }
+                    chips:
+                      - type: entity
+                        entity: sensor.anaiahs_iphone_public_ip_address
+                        icon_color: teal
+                        double_tap_action:
+                          action: none
+                        hold_action:
+                          action: none
+                        tap_action:
+                          action: more-info
+                    alignment: center
+                  - type: custom:mushroom-chips-card
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --chip-font-size: 0.32em;
+                          --chip-icon-size: 0.52em;
+                          --chip-border-width: 0;
+                          --chip-box-shadow: none;
+                          --chip-background: none;
+                          --chip-border: none;
+                          --chip-spacing: none;
+                          --chip-font-weight: normal;
+                        }
+                    chips:
+                      - type: entity
+                        entity: sensor.anaiahs_iphone_last_reboot
+                        icon_color: teal
+                        double_tap_action:
+                          action: none
+                        hold_action:
+                          action: none
+                        tap_action:
+                          action: more-info
+                    alignment: center
+      - type: horizontal-stack
+        cards:
+          - type: custom:swipe-card
+            cards:
+              - type: custom:stack-in-card
+                cards:
+                  - type: custom:mushroom-person-card
+                    entity: person.riz
+                    icon_type: entity-picture
+                    tap_action:
+                      action: more-info
+                    double_tap_action:
+                      action: none
+                    hold_action:
+                      action: none
+                    secondary_info: state
+                    layout: horizontal
+                    primary_info: name
+                    fill_container: true
+                  - type: custom:mushroom-chips-card
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --chip-font-size: 0.3em;
+                          --chip-icon-size: 0.5em;
+                          --chip-border-width: 0;
+                          --chip-box-shadow: none;
+                          --chip-background: none;
+                          --chip-border: none;
+                          --chip-spacing: none;
+                          --chip-font-weight: bold;
+                        }
+                    chips:
+                      - type: template
+                        entity: sensor.rizs_iphone_battery_level
+                        icon: >-
+                          {% set battery =
+                          states('sensor.rizs_iphone_battery_level')|int %}
+
+                          {% if battery < 20 %}
+                            mdi:battery-10
+                          {% elif battery < 40 %}
+                            mdi:battery-30
+                          {% elif battery < 60 %}
+                            mdi:battery-50
+                          {% elif battery < 80 %}
+                            mdi:battery-70
+                          {% elif battery >= 80 %}
+                            mdi:battery-90
+                          {% else %}
+                            mdi:battery-unknown
+                          {% endif %}
+                        icon_color: >-
+                          {% set battery =
+                          states('sensor.rizs_iphone_battery_level')|int %} {%
+                          if battery < 20 %}
+                            red
+                          {% elif battery < 40 %}
+                            orange
+                          {% elif battery < 60 %}
+                            amber
+                          {% elif battery < 80 %}
+                            green
+                          {% elif battery >= 80 %}
+                            green
+                          {% else %}
+                            blue
+                          {% endif %}
+                        content: '{{states(''sensor.rizs_iphone_battery_level'')}}%'
+                        tap_action:
+                          action: more-info
+                      - type: template
+                        entity: sensor.rizs_iphone_battery_level
+                        icon: >-
+                          {% if
+                          is_state('sensor.rizs_iphone_battery_state','Charging')%}mdi:power-plug
+                          {% else %} mdi:power-plug-off {% endif
+                          %}                  
+                        icon_color: >-
+                          {% if
+                          is_state('sensor.rizs_iphone_battery_state','Charging')%}blue
+
+                          {% else %} grey
+
+                          {% endif %}
+                        content: ''
+                        tap_action:
+                          action: none
+                      - type: template
+                        entity: sensor.rizs_iphone_connection_type
+                        icon: >-
+                          {% if
+                          is_state('sensor.rizs_iphone_connection_type','Wi-Fi')%}
+                            mdi:wifi 
+                          {% elif
+                          is_state('sensor.rizs_iphone_connection_type','Cellular')%}
+                            mdi:signal-4g
+                          {% else %} 
+                            mdi:network-strength-off
+                          {% endif %}  
+                        icon_color: >-
+                          {% if
+                          is_state('sensor.rizs_iphone_connection_type','Wi-Fi')%}
+                           green
+                          {% elif
+                          is_state('sensor.rizs_iphone_connection_type','Cellular')%}
+                           red
+                          {% else %} grey
+
+                          {% endif %}   
+                        content: ''
+                        hold_action:
+                          action: none
+                        double_tap_action:
+                          action: none
+                        tap_action:
+                          action: none
+                    alignment: center
+                  - type: custom:mushroom-chips-card
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --chip-font-size: 0.28em;
+                          --chip-icon-size: 0.4em;
+                          --chip-border-width: 0;
+                          --chip-box-shadow: none;
+                          --chip-background: none;
+                          --chip-border: none;
+                          --chip-font-weight: normal;
+                        }
+                    alignment: justify
+                    chips:
+                      - type: entity
+                        entity: device_tracker.rizs_iphone
+                        content_info: last-updated
+                        icon: mdi:clock
+                        icon_color: grey
+                        tap_action:
+                          action: more-info
+                      - type: entity
+                        entity: sensor.rizs_iphone_proximity
+                        content_info: state
+                        icon: mdi:map-marker-right-outline
+                        icon_color: grey
+                        tap_action:
+                          action: more-info
+              - type: custom:stack-in-card
+                mode: vertical
+                keep:
+                  margin: true
+                  outer-padding: false
+                cards:
+                  - type: custom:mushroom-template-card
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --font-size: 0.32em;
+                          --icon-size: 0.52em;
+                          --border-width: 0;
+                          --box-shadow: none;
+                          --background: none;
+                          --border: none;
+                          --spacing: 0.5em;
+                          --font-weight: normal;
+                        }
+                    primary: ''
+                    secondary: MacBook Air M2
+                    icon: ''
+                    entity: device_tracker.rizs_macbook_air_m2
+                    layout: vertical
+                    double_tap_action:
+                      action: none
+                    hold_action:
+                      action: none
+                    tap_action:
+                      action: more-info
+                  - type: custom:mushroom-chips-card
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --chip-font-size: 0.32em;
+                          --chip-icon-size: 0.52em;
+                          --chip-border-width: 0;
+                          --chip-box-shadow: none;
+                          --chip-background: none;
+                          --chip-border: none;
+                          --chip-spacing: none;
+                          --chip-font-weight: normal;
+                        }
+                    chips:
+                      - type: template
+                        entity: sensor.rizs_macbook_air_m2_internal_battery_level
+                        icon: >-
+                          {% set battery =
+                          states('sensor.rizs_macbook_air_m2_internal_battery_level')|int
+                          %}
+
+                          {% if battery < 20 %}
+                            mdi:battery-10
+                          {% elif battery < 40 %}
+                            mdi:battery-30
+                          {% elif battery < 60 %}
+                            mdi:battery-50
+                          {% elif battery < 80 %}
+                            mdi:battery-70
+                          {% elif battery >= 90 %}
+                            mdi:battery-90
+                          {% else %}
+                            mdi:battery-unknown
+                          {% endif %}
+                        icon_color: >-
+                          {% set battery =
+                          states('sensor.rizs_macbook_air_m2_internal_battery_level')|int
+                          %} {% if battery < 20 %}
+                            red
+                          {% elif battery < 40 %}
+                            orange
+                          {% elif battery < 60 %}
+                            amber
+                          {% elif battery < 80 %}
+                            green
+                          {% elif battery >= 80 %}
+                            green
+                          {% else %}
+                            blue
+                          {% endif %}
+                        content: >-
+                          {{states('sensor.rizs_macbook_air_m2_internal_battery_level')}}%
+                        tap_action:
+                          action: more-info
+                      - type: template
+                        entity: sensor.rizs_macbook_air_m2_internal_battery_state
+                        icon: >-
+                          {% if
+                          is_state('sensor.rizs_macbook_air_m2_internal_battery_state','Charging')%}mdi:power-plug
+                          {% else %} mdi:power-plug-off {% endif
+                          %}                  
+                        icon_color: >-
+                          {% if
+                          is_state('sensor.rizs_macbook_air_m2_internal_battery_state','Charging')%}blue
+
+                          {% else %} grey
+
+                          {% endif %}
+                        content: ''
+                        tap_action:
+                          action: none
+                      - type: template
+                        entity: binary_sensor.rizs_macbook_air_m2_active
+                        icon: >-
+                          {% if
+                          states('binary_sensor.rizs_macbook_air_m2_active') ==
+                          'off' %}
+                            mdi:monitor-off
+                          {% else %} 
+                            mdi:monitor-lock
+                          {% endif %}  
+                        icon_color: >-
+                          {% if
+                          is_state('binary_sensor.rizs_macbook_air_m2_active','off')%}
+                           grey
+                          {% elif
+                          is_state('binary_sensor.rizs_macbook_air_m2_active','on')%}
+                           green
+                          {% else %}
+                           grey
+                          {% endif %}   
+                        content: ''
+                        hold_action:
+                          action: none
+                        double_tap_action:
+                          action: none
+                        tap_action:
+                          action: none
+                    alignment: center
+          - type: custom:swipe-card
+            cards:
+              - type: custom:stack-in-card
+                cards:
+                  - type: custom:mushroom-person-card
+                    entity: person.mariam
+                    icon_type: entity-picture
+                    tap_action:
+                      action: more-info
+                    double_tap_action:
+                      action: none
+                    hold_action:
+                      action: none
+                    secondary_info: state
+                    layout: horizontal
+                    primary_info: name
+                    fill_container: true
+                  - type: custom:mushroom-chips-card
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --chip-font-size: 0.3em;
+                          --chip-icon-size: 0.5em;
+                          --chip-border-width: 0;
+                          --chip-box-shadow: none;
+                          --chip-background: none;
+                          --chip-border: none;
+                          --chip-spacing: none;
+                          --chip-font-weight: bold;
+                        }
+                    chips:
+                      - type: template
+                        entity: sensor.sm_s908b_battery_level
+                        icon: >-
+                          {% set battery =
+                          states('sensor.sm_s908b_battery_level')|int %}
+
+                          {% if battery < 20 %}
+                            mdi:battery-10
+                          {% elif battery < 40 %}
+                            mdi:battery-30
+                          {% elif battery < 60 %}
+                            mdi:battery-50
+                          {% elif battery < 80 %}
+                            mdi:battery-70
+                          {% elif battery >= 80 %}
+                            mdi:battery-90
+                          {% else %}
+                            mdi:battery-unknown
+                          {% endif %}
+                        icon_color: >-
+                          {% set battery =
+                          states('sensor.sm_s908b_battery_level')|int %} {% if
+                          battery < 20 %}
+                            red
+                          {% elif battery < 40 %}
+                            orange
+                          {% elif battery < 60 %}
+                            amber
+                          {% elif battery < 80 %}
+                            green
+                          {% elif battery >= 80 %}
+                            green
+                          {% else %}
+                            blue
+                          {% endif %}
+                        content: '{{states(''sensor.sm_s908b_battery_level'')}}%'
+                        tap_action:
+                          action: more-info
+                      - type: template
+                        entity: sensor.sm_s908b_battery_level
+                        icon: >-
+                          {% if
+                          is_state('sensor.sm_s908b_battery_state','Charging')%}mdi:power-plug
+                          {% else %} mdi:power-plug-off {% endif
+                          %}                  
+                        icon_color: >-
+                          {% if
+                          is_state('sensor.sm_s908b_battery_state','Charging')%}blue
+
+                          {% else %} grey
+
+                          {% endif %}
+                        content: ''
+                        tap_action:
+                          action: none
+                      - type: template
+                        entity: sensor.sm_s908b_connection_type
+                        icon: >-
+                          {% if
+                          is_state('sensor.sm_s908b_connection_type','Wi-Fi')%}
+                            mdi:wifi 
+                          {% elif
+                          is_state('sensor.sm_s908b_connection_type','Cellular')%}
+                            mdi:signal-4g
+                          {% else %} mdi:network-strength-off
+
+                          {% endif %}  
+                        icon_color: >-
+                          {% if
+                          is_state('sensor.sm_s908b_connection_type','Wi-Fi')%}
+                           green
+                          {% elif
+                          is_state('sensor.sm_s908b_connection_type','Cellular')%}
+                           red
+                          {% else %} grey
+
+                          {% endif %}   
+                        content: ''
+                        hold_action:
+                          action: none
+                        double_tap_action:
+                          action: none
+                        tap_action:
+                          action: none
+                    alignment: center
+                  - type: custom:mushroom-chips-card
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --chip-font-size: 0.28em;
+                          --chip-icon-size: 0.4em;
+                          --chip-border-width: 0;
+                          --chip-box-shadow: none;
+                          --chip-background: none;
+                          --chip-border: none;
+                          --chip-font-weight: normal;
+                        }
+                    alignment: justify
+                    chips:
+                      - type: entity
+                        entity: device_tracker.sm_s908b
+                        content_info: last-updated
+                        icon: mdi:clock
+                        icon_color: grey
+                        tap_action:
+                          action: more-info
+                      - type: entity
+                        entity: sensor.sm_s908b_proximity
+                        content_info: state
+                        icon: mdi:map-marker-right-outline
+                        icon_color: grey
+                        tap_action:
+                          action: more-info
+              - type: custom:stack-in-card
+                mode: vertical
+                keep:
+                  margin: true
+                  outer-padding: false
+                cards:
+                  - type: custom:mushroom-template-card
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --font-size: 0.32em;
+                          --icon-size: 0.52em;
+                          --border-width: 0;
+                          --box-shadow: none;
+                          --background: none;
+                          --border: none;
+                          --spacing: 0.5em;
+                          --font-weight: normal;
+                        }
+                    primary: ''
+                    secondary: 'WiFi: {{states(''sensor.anaiahs_iphone_wifi_connection'')}}'
+                    icon: ''
+                    entity: sensor.anaiahs_iphone_wifi_connection
+                    layout: vertical
+                    double_tap_action:
+                      action: none
+                    hold_action:
+                      action: none
+                    tap_action:
+                      action: more-info
+                  - type: custom:mushroom-chips-card
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --chip-font-size: 0.32em;
+                          --chip-icon-size: 0.52em;
+                          --chip-border-width: 0;
+                          --chip-box-shadow: none;
+                          --chip-background: none;
+                          --chip-border: none;
+                          --chip-spacing: none;
+                          --chip-font-weight: normal;
+                        }
+                    chips:
+                      - type: entity
+                        entity: sensor.anaiahs_iphone_detected_activity
+                        icon_color: teal
+                        double_tap_action:
+                          action: none
+                        hold_action:
+                          action: none
+                        tap_action:
+                          action: more-info
+                      - type: entity
+                        entity: automation.a_on_state
+                        icon_color: red
+                        icon: mdi:cellphone-wireless
+                        use_entity_picture: false
+                        content_info: none
+                        tap_action:
+                          action: call-service
+                          service: script.anaiahs_iphone_find_phone
+                          data: {}
+                          target: {}
+                        hold_action:
+                          action: none
+                        double_tap_action:
+                          action: none
+                    alignment: center
+                  - type: custom:mushroom-entity-card
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --font-size: 0.2em;
+                          --icon-size: 0.5em;
+                          --border-width: 0;
+                          --box-shadow: none;
+                          --background: none;
+                          --border: none;
+                          --spacing: none;
+                          --font-weight: normal;
+                        }
+                    entity: sensor.anaiahs_iphone_geo_1
+                    icon_type: none
+                    primary_info: ''
+                    name: 'Possible Location:'
+                    layout: vertical
+                    fill_container: true
+                    double_tap_action:
+                      action: none
+                    hold_action:
+                      action: none
+                    tap_action:
+                      action: more-info
+                  - type: custom:mushroom-entity-card
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --font-size: 0.2em;
+                          --icon-size: 0.5em;
+                          --border-width: 0;
+                          --box-shadow: none;
+                          --background: none;
+                          --border: none;
+                          --spacing: none;
+                          --font-weight: normal;
+                        }
+                    entity: sensor.anaiahs_iphone_geo_2
+                    icon_type: none
+                    primary_info: ''
+                    name: 'Possible Location:'
+                    layout: vertical
+                    fill_container: true
+                    double_tap_action:
+                      action: none
+                    hold_action:
+                      action: none
+                    tap_action:
+                      action: more-info
+              - type: custom:stack-in-card
+                mode: vertical
+                keep:
+                  margin: true
+                  outer-padding: true
+                cards:
+                  - type: custom:mushroom-template-card
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --font-size: 0.3em;
+                          --icon-size: 0.5em;
+                          --border-width: 0;
+                          --box-shadow: none;
+                          --background: none;
+                          --border: none;
+                          --spacing: 0.5em;
+                          --font-weight: normal;
+                        }
+                    primary: ''
+                    secondary: 'other info:'
+                    icon: ''
+                    entity: sensor.karam_wifi_connection
+                    layout: vertical
+                    double_tap_action:
+                      action: none
+                    hold_action:
+                      action: none
+                    tap_action:
+                      action: more-info
+                  - type: custom:mushroom-chips-card
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --chip-font-size: 0.32em;
+                          --chip-icon-size: 0.52em;
+                          --chip-border-width: 0;
+                          --chip-box-shadow: none;
+                          --chip-background: none;
+                          --chip-border: none;
+                          --chip-spacing: none;
+                          --chip-font-weight: normal;
+                        }
+                    chips:
+                      - type: entity
+                        entity: sensor.anaiahs_iphone_public_ip_address
+                        icon_color: teal
+                        double_tap_action:
+                          action: none
+                        hold_action:
+                          action: none
+                        tap_action:
+                          action: more-info
+                    alignment: center
+                  - type: custom:mushroom-chips-card
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --chip-font-size: 0.32em;
+                          --chip-icon-size: 0.52em;
+                          --chip-border-width: 0;
+                          --chip-box-shadow: none;
+                          --chip-background: none;
+                          --chip-border: none;
+                          --chip-spacing: none;
+                          --chip-font-weight: normal;
+                        }
+                    chips:
+                      - type: entity
+                        entity: sensor.anaiahs_iphone_last_reboot
+                        icon_color: teal
+                        double_tap_action:
+                          action: none
+                        hold_action:
+                          action: none
+                        tap_action:
+                          action: more-info
+                    alignment: center
+  - icon: mdi:bullhorn
+    title: Announcements
+    path: announcements
+    theme: No Borders Daniyal
+    subview: true
+    type: custom:grid-layout
+    badges: []
+    cards:
+      - type: markdown
+        content: >-
+          A **system-wide battery change** will comence in the next few days.
+          **Please allow time** for current devices to be **reconnected to the
+          network.**
+        theme: No Borders Daniyal
+        title: Notice
+  - title: System
+    path: cpu
+    icon: mdi:cpu-64-bit
+    subview: true
+    theme: No Borders Daniyal
+    badges: []
+    cards:
+      - square: false
+        type: grid
+        cards:
+          - type: custom:mini-graph-card
+            entities:
+              - entity: sensor.processor_use
+                name: CPU
+            line_color: lightblue
+            hours_to_show: 24
+          - type: custom:mini-graph-card
+            entities:
+              - entity: sensor.processor_temperature
+                name: CPU Temp
+            line_color: lightblue
+            hours_to_show: 24
+          - type: custom:mini-graph-card
+            entities:
+              - entity: sensor.desktop_vil10sj_cpuload
+                name: MINISFORUM-CPU
+            line_color: lightblue
+            icon: mdi:cpu-64-bit
+            hours_to_show: 24
+          - type: custom:mini-graph-card
+            entities:
+              - entity: sensor.desktop_vil10sj_gputemperature
+                name: MINISFORUM-Temp
+            line_color: lightblue
+            hours_to_show: 24
+          - type: custom:mushroom-template-card
+            primary: Restart
+            secondary: ''
+            icon: mdi:restart
+            entity: input_button.reboot_ha
+            icon_color: red
+            fill_container: true
+            tap_action:
+              action: more-info
+            hold_action:
+              action: more-info
+            double_tap_action:
+              action: none
+            layout: vertical
+          - type: custom:mushroom-template-card
+            primary: Restart Addons
+            secondary: ''
+            icon: mdi:restart
+            entity: input_button.addons_restart
+            icon_color: blue
+            fill_container: true
+            tap_action:
+              action: more-info
+            hold_action:
+              action: more-info
+            double_tap_action:
+              action: none
+            layout: vertical
+        columns: 2
+  - title: Cinema Room
+    path: cinema-room
+    icon: mdi:projector
+    subview: true
+    badges: []
+    cards:
+      - square: true
+        type: grid
+        cards:
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: more-info
+            theme: No Borders Daniyal
+            show_state: false
+            entity: light.cinema_room_lamp
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: more-info
+            theme: No Borders Daniyal
+            entity: light.cinema_room_led
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: more-info
+            theme: No Borders Daniyal
+            entity: cover.cinema_room_blinds
+            hold_action:
+              action: none
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: more-info
+            theme: No Borders Daniyal
+            hold_action:
+              action: none
+            entity: media_player.home_cinema
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: more-info
+            theme: No Borders Daniyal
+            hold_action:
+              action: none
+            entity: media_player.xgimi_horizon_pro_android
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: more-info
+            theme: No Borders Daniyal
+            hold_action:
+              action: none
+            entity: climate.cinema_aircon
+            icon: mdi:air-conditioner
+        columns: 2
+  - title: Living Room
+    path: living-room
+    icon: mdi:sofa
+    theme: No Borders Daniyal
+    subview: true
+    badges: []
+    cards: []
+  - title: Master Bedroom
+    path: master-bedroom
+    icon: mdi:bed-king
+    theme: No Borders Daniyal
+    subview: true
+    badges: []
+    cards:
+      - square: false
+        type: grid
+        cards:
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: more-info
+            entity: light.chandelier_1
+            theme: No Borders Daniyal
+            show_state: false
+            icon_height: 30px
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: more-info
+            entity: light.chandelier_2
+            theme: No Borders Daniyal
+            icon_height: 30px
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: more-info
+            entity: light.bed_light
+            theme: No Borders Daniyal
+            icon_height: 30px
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: more-info
+            entity: light.bed_light_2
+            theme: No Borders Daniyal
+            icon_height: 30px
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: more-info
+            entity: light.mbh1
+            theme: No Borders Daniyal
+            icon_height: 30px
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: more-info
+            entity: light.mbh2
+            theme: No Borders Daniyal
+            icon_height: 30px
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: more-info
+            entity: light.mbh3
+            theme: No Borders Daniyal
+            icon_height: 30px
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: more-info
+            entity: light.mbh4
+            theme: No Borders Daniyal
+            icon_height: 30px
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: more-info
+            entity: light.mbh5
+            theme: No Borders Daniyal
+            icon_height: 30px
+        columns: 2
+  - title: Rooms
+    path: rooms
+    icon: mdi:bed
+    subview: true
+    theme: No Borders Daniyal
+    badges: []
+    background: center / cover no-repeat fixed rgb(45, 45, 45)
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: horizontal-stack
+            cards:
+              - type: custom:stack-in-card
+                cards:
+                  - type: custom:slider-button-card
+                    entity: light.anaiahs_room
+                    slider:
+                      direction: left-right
+                      background: gradient
+                      use_state_color: true
+                      use_percentage_bg_opacity: false
+                      show_track: false
+                      toggle_on_click: false
+                      force_square: false
+                    show_name: true
+                    show_state: true
+                    compact: false
+                    icon:
+                      show: true
+                      use_state_color: true
+                      tap_action:
+                        action: navigate
+                        navigation_path: anaiahs-room
+                      icon: ''
+                    action_button:
+                      mode: toggle
+                      icon: mdi:power
+                      show: true
+                      show_spinner: true
+                      tap_action:
+                        action: toggle
+                    card_mod:
+                      style: |
+                        ha-card {
+                          border: none;
+                        }
+                  - type: custom:mushroom-chips-card
+                    chips:
+                      - type: template
+                        entity: climate.anaiahs_room_aircon
+                        icon: mdi:air-conditioner
+                        icon_color: >-
+                          {% if states('climate.anaiahs_room_aircon') == 'off'
+                          %}
+                            grey
+                          {% elif states('climate.anaiahs_room_aircon') ==
+                          'cool' %}
+                            blue
+                          {% elif states('climate.anaiahs_room_aircon') ==
+                          'heat' %}
+                            red
+                          {% else %}
+                            yellow
+                          {% endif %}
+                        card_mod:
+                          style: |
+                            ha-card {
+                              border: none;
+                            }
+                      - type: spacer
+                      - type: template
+                        entity: sensor.anaiahs_room_aircon_room_temperature
+                        icon: mdi:thermometer
+                        icon_color: >-
+                          {% if
+                          states('sensor.anaiahs_room_aircon_room_temperature')
+                          < '25' %}
+                            blue
+                          {% else %}
+                            red
+                          {% endif %}
+                        content: >-
+                          {{
+                          states('sensor.anaiahs_room_aircon_room_temperature')
+                          }}°C
+                        tap_action:
+                          action: more-info
+                        card_mod:
+                          style: |
+                            ha-card {
+                              border: none;
+                            }
+              - type: custom:stack-in-card
+                cards:
+                  - type: custom:slider-button-card
+                    entity: light.daniyals_room_2
+                    slider:
+                      direction: left-right
+                      background: gradient
+                      use_state_color: true
+                      use_percentage_bg_opacity: false
+                      show_track: false
+                      toggle_on_click: false
+                      force_square: false
+                    show_name: true
+                    show_state: true
+                    compact: false
+                    icon:
+                      show: true
+                      use_state_color: true
+                      tap_action:
+                        action: navigate
+                        navigation_path: daniyals-room
+                      icon: ''
+                    action_button:
+                      mode: toggle
+                      icon: mdi:power
+                      show: true
+                      show_spinner: true
+                      tap_action:
+                        action: toggle
+                    card_mod:
+                      style: |
+                        ha-card {
+                          border: none;
+                        }
+                  - type: custom:mushroom-chips-card
+                    chips:
+                      - type: template
+                        entity: climate.daniyals_room_aircon
+                        icon: mdi:air-conditioner
+                        icon_color: >-
+                          {% if states('climate.daniyals_room_aircon') == 'off'
+                          %}
+                            grey
+                          {% elif states('climate.daniyals_room_aircon') ==
+                          'cool' %}
+                            blue
+                          {% elif states('climate.daniyals_room_aircon') ==
+                          'heat' %}
+                            red
+                          {% else %}
+                            yellow
+                          {% endif %}
+                        card_mod:
+                          style: |
+                            ha-card {
+                              border: none;
+                            }
+                      - type: template
+                        entity: switch.minisforum_dmaf5
+                        icon: mdi:desktop-tower-monitor
+                        icon_color: |-
+                          {% if states('switch.minisforum_dmaf5') == 'on' %}
+                            green
+                          {% else %}
+                            grey
+                          {% endif %}
+                        card_mod:
+                          style: |
+                            ha-card {
+                              border: none;
+                            }
+                      - type: spacer
+                      - type: template
+                        entity: sensor.daniyals_room_aircon_room_temperature
+                        icon: mdi:thermometer
+                        icon_color: >-
+                          {% if
+                          states('sensor.daniyals_room_aircon_room_temperature')
+                          < '25' %}
+                            blue
+                          {% else %}
+                            red
+                          {% endif %}
+                        content: >-
+                          {{
+                          states('sensor.daniyals_room_aircon_room_temperature')
+                          }}°C
+                        tap_action:
+                          action: more-info
+                        card_mod:
+                          style: |
+                            ha-card {
+                              border: none;
+                            }
+          - type: horizontal-stack
+            cards:
+              - type: custom:stack-in-card
+                cards:
+                  - type: custom:slider-button-card
+                    entity: light.master_bedroom
+                    slider:
+                      direction: left-right
+                      background: gradient
+                      use_state_color: true
+                      use_percentage_bg_opacity: false
+                      show_track: false
+                      toggle_on_click: false
+                      force_square: false
+                    show_name: true
+                    show_state: true
+                    compact: false
+                    icon:
+                      show: true
+                      use_state_color: true
+                      tap_action:
+                        action: navigate
+                        navigation_path: master-bedroom
+                      icon: ''
+                    action_button:
+                      mode: toggle
+                      icon: mdi:power
+                      show: true
+                      show_spinner: true
+                      tap_action:
+                        action: toggle
+                    card_mod:
+                      style: |
+                        ha-card {
+                          border: none;
+                        }
+                  - type: custom:mushroom-chips-card
+                    chips:
+                      - type: template
+                        entity: climate.master_bedroom_aircon
+                        icon: mdi:air-conditioner
+                        icon_color: >-
+                          {% if states('climate.master_bedroom_aircon') == 'off'
+                          %}
+                            grey
+                          {% elif states('climate.master_bedroom_aircon') ==
+                          'cool' %}
+                            blue
+                          {% elif states('climate.master_bedroom_aircon') ==
+                          'heat' %}
+                            red
+                          {% else %}
+                            yellow
+                          {% endif %}
+                        card_mod:
+                          style: |
+                            ha-card {
+                              border: none;
+                            }
+                        tap_action:
+                          action: more-info
+                      - type: spacer
+                      - type: template
+                        entity: sensor.master_bedroom_aircon_room_temperature
+                        icon: mdi:thermometer
+                        icon_color: >-
+                          {% if
+                          states('sensor.master_bedroom_aircon_room_temperature')
+                          < '25' %}
+                            blue
+                          {% else %}
+                            red
+                          {% endif %}
+                        content: >-
+                          {{
+                          states('sensor.master_bedroom_aircon_room_temperature')
+                          }}°C
+                        card_mod:
+                          style: |
+                            ha-card {
+                              border: none;
+                            }
+              - type: custom:stack-in-card
+                cards:
+                  - type: custom:slider-button-card
+                    entity: input_boolean.navigate_dashboard
+                    slider:
+                      direction: left-right
+                      background: gradient
+                      use_state_color: true
+                      use_percentage_bg_opacity: false
+                      show_track: false
+                      toggle_on_click: false
+                      force_square: false
+                    show_name: true
+                    name: Ammi & Abbu Room
+                    show_state: true
+                    compact: false
+                    icon:
+                      show: true
+                      use_state_color: true
+                      tap_action:
+                        action: navigate
+                        navigation_path: ammi-abbu-room
+                      icon: mdi:bed-double
+                    action_button:
+                      mode: toggle
+                      icon: mdi:power
+                      show: true
+                      show_spinner: true
+                      tap_action:
+                        action: toggle
+                    card_mod:
+                      style: |
+                        ha-card {
+                          border: none;
+                        }
+                  - type: custom:mushroom-chips-card
+                    chips:
+                      - type: template
+                        entity: climate.ammi_abbu_room_aircon
+                        icon: mdi:air-conditioner
+                        icon_color: >-
+                          {% if states('climate.ammi_abbu_room_aircon') == 'off'
+                          %}
+                            grey
+                          {% elif states('climate.ammi_abbu_room_aircon') ==
+                          'cool' %}
+                            blue
+                          {% elif states('climate.ammi_abbu_room_aircon') ==
+                          'heat' %}
+                            red
+                          {% else %}
+                            yellow
+                          {% endif %}
+                        card_mod:
+                          style: |
+                            ha-card {
+                              border: none;
+                            }
+                      - type: spacer
+                      - type: template
+                        entity: sensor.ammi_abbu_room_aircon_room_temperature
+                        icon: mdi:thermometer
+                        icon_color: >-
+                          {% if
+                          states('sensor.ammi_abbu_room_aircon_room_temperature')
+                          < '25' %}
+                            blue
+                          {% else %}
+                            red
+                          {% endif %}
+                        content: >-
+                          {{
+                          states('sensor.ammi_abbu_room_aircon_room_temperature')
+                          }}°C
+                        card_mod:
+                          style: |
+                            ha-card {
+                              border: none;
+                            }
+  - title: ' '
+    path: ''
+    subview: true
+    badges: []
+    cards: []
+  - title: Batteries
+    path: battery
+    icon: mdi:power-plug-battery
+    theme: No Borders Daniyal
+    subview: true
+    badges: []
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: horizontal-stack
+            cards:
+              - type: custom:mushroom-template-card
+                primary: Front Door
+                secondary: ''
+                icon: mdi:door
+                layout: vertical
+                icon_color: >-
+                  {% if
+                  is_state('binary_sensor.lumi_lumi_sensor_magnet_aq2_opening','unavailable')
+                  %}
+                    grey
+                  {% else %}
+                    green
+                  {% endif %}
+                entity: sensor.lumi_lumi_sensor_magnet_aq2_battery
+              - type: custom:mushroom-template-card
+                primary: '{{ states(''sensor.lumi_lumi_sensor_magnet_aq2_battery'') }}%'
+                secondary: ''
+                icon: >-
+                  {% set battery =
+                  states('sensor.lumi_lumi_sensor_magnet_aq2_battery')|int %}
+
+
+                  {% if battery < 20 %}
+                    mdi:battery-10
+                  {% elif battery < 40 %}
+                    mdi:battery-30
+                  {% elif battery < 60 %}
+                    mdi:battery-50
+                  {% elif battery < 80 %}
+                    mdi:battery-70
+                  {% elif battery >= 80 %}
+                    mdi:battery-90
+                  {% elif battery > 90 %}
+                    mdi:battery
+                  {% else %}
+                    mdi:battery-unknown
+                  {% endif %}
+                layout: vertical
+                icon_color: >-
+                  {% set accessory =
+                  states('sensor.lumi_lumi_sensor_magnet_aq2_battery')|int %}
+
+                  {% if accessory < 25 %}
+                    red
+                  {% elif accessory < 50 %}
+                    amber
+                  {% elif accessory < 100 %}
+                    green
+                  {% endif %}
+                tap_action:
+                  action: more-info
+                entity: sensor.lumi_lumi_sensor_magnet_aq2_battery
+          - type: horizontal-stack
+            cards:
+              - type: custom:mushroom-template-card
+                primary: Living Room
+                secondary: ''
+                icon: mdi:motion-sensor
+                layout: vertical
+                icon_color: >-
+                  {% if
+                  is_state('binary_sensor.lumi_lumi_sensor_motion_aq2_iaszone','unavailable')
+                  %}
+                    grey
+                  {% else %}
+                    green
+                  {% endif %}
+                entity: sensor.lumi_lumi_sensor_motion_aq2_battery
+              - type: custom:mushroom-template-card
+                primary: '{{ states(''sensor.lumi_lumi_sensor_motion_aq2_battery'') }}%'
+                secondary: ''
+                icon: >-
+                  {% set battery =
+                  states('sensor.lumi_lumi_sensor_motion_aq2_battery')|int %}
+
+
+                  {% if battery < 20 %}
+                    mdi:battery-10
+                  {% elif battery < 40 %}
+                    mdi:battery-30
+                  {% elif battery < 60 %}
+                    mdi:battery-50
+                  {% elif battery < 80 %}
+                    mdi:battery-70
+                  {% elif battery >= 80 %}
+                    mdi:battery-90
+                  {% elif battery > 90 %}
+                    mdi:battery
+                  {% else %}
+                    mdi:battery-unknown
+                  {% endif %}
+                layout: vertical
+                icon_color: >-
+                  {% set accessory =
+                  states('sensor.lumi_lumi_sensor_motion_aq2_battery')|int %}
+
+                  {% if accessory < 25 %}
+                    red
+                  {% elif accessory < 50 %}
+                    amber
+                  {% elif accessory < 100 %}
+                    green
+                  {% endif %}
+                entity: sensor.lumi_lumi_sensor_motion_aq2_battery
+                tap_action:
+                  action: more-info
+          - type: horizontal-stack
+            cards:
+              - type: custom:mushroom-template-card
+                primary: Utility Kitchen
+                secondary: ''
+                icon: mdi:motion-sensor
+                layout: vertical
+                icon_color: >-
+                  {% if
+                  is_state('binary_sensor.lumi_lumi_sensor_motion_aq2_iaszone_2','unavailable')
+                  %}
+                    grey
+                  {% else %}
+                    green
+                  {% endif %}
+                entity: sensor.lumi_lumi_sensor_motion_aq2_battery_2
+              - type: custom:mushroom-template-card
+                primary: '{{ states(''sensor.lumi_lumi_sensor_motion_aq2_battery_2'') }}%'
+                secondary: ''
+                icon: >-
+                  {% set battery =
+                  states('sensor.lumi_lumi_sensor_motion_aq2_battery_2')|int %}
+
+
+                  {% if battery < 20 %}
+                    mdi:battery-10
+                  {% elif battery < 40 %}
+                    mdi:battery-30
+                  {% elif battery < 60 %}
+                    mdi:battery-50
+                  {% elif battery < 80 %}
+                    mdi:battery-70
+                  {% elif battery >= 80 %}
+                    mdi:battery-90
+                  {% elif battery > 90 %}
+                    mdi:battery
+                  {% else %}
+                    mdi:battery-unknown
+                  {% endif %}
+                layout: vertical
+                icon_color: >-
+                  {% set accessory =
+                  states('sensor.lumi_lumi_sensor_motion_aq2_battery_2')|int %}
+
+                  {% if accessory < 25 %}
+                    red
+                  {% elif accessory < 50 %}
+                    amber
+                  {% elif accessory < 100 %}
+                    green
+                  {% endif %}
+                tap_action:
+                  action: more-info
+                entity: sensor.lumi_lumi_sensor_motion_aq2_battery_2
+          - type: horizontal-stack
+            cards:
+              - type: custom:mushroom-template-card
+                primary: Laundry
+                secondary: ''
+                icon: mdi:motion-sensor
+                layout: vertical
+                icon_color: >-
+                  {% if
+                  is_state('binary_sensor.lumi_lumi_sensor_motion_aq2_iaszone_3','unavailable')
+                  %}
+                    grey
+                  {% else %}
+                    green
+                  {% endif %}
+                entity: sensor.lumi_lumi_sensor_motion_aq2_battery_3
+              - type: custom:mushroom-template-card
+                primary: '{{ states(''sensor.lumi_lumi_sensor_motion_aq2_battery_3'') }}%'
+                secondary: ''
+                icon: >-
+                  {% set battery =
+                  states('sensor.lumi_lumi_sensor_motion_aq2_battery_3')|int %}
+
+
+                  {% if battery < 20 %}
+                    mdi:battery-10
+                  {% elif battery < 40 %}
+                    mdi:battery-30
+                  {% elif battery < 60 %}
+                    mdi:battery-50
+                  {% elif battery < 80 %}
+                    mdi:battery-70
+                  {% elif battery >= 80 %}
+                    mdi:battery-90
+                  {% elif battery > 90 %}
+                    mdi:battery
+                  {% else %}
+                    mdi:battery-unknown
+                  {% endif %}
+                layout: vertical
+                icon_color: >-
+                  {% set accessory =
+                  states('sensor.lumi_lumi_sensor_motion_aq2_battery_3')|int %}
+
+                  {% if accessory < 25 %}
+                    red
+                  {% elif accessory < 50 %}
+                    amber
+                  {% elif accessory < 100 %}
+                    green
+                  {% endif %}
+                entity: sensor.lumi_lumi_sensor_motion_aq2_battery_3
+                tap_action:
+                  action: more-info
+          - type: horizontal-stack
+            cards:
+              - type: custom:mushroom-template-card
+                primary: Ammi's Button
+                secondary: ''
+                icon: mdi:camera-control
+                layout: vertical
+                icon_color: green
+                entity: sensor.ikea_of_sweden_tradfri_remote_control_battery
+              - type: custom:mushroom-template-card
+                primary: >-
+                  {{
+                  states('sensor.ikea_of_sweden_tradfri_remote_control_battery')
+                  }}%
+                secondary: ''
+                icon: >-
+                  {% set battery =
+                  states('sensor.ikea_of_sweden_tradfri_remote_control_battery')|int
+                  %}
+
+
+                  {% if battery < 20 %}
+                    mdi:battery-10
+                  {% elif battery < 40 %}
+                    mdi:battery-30
+                  {% elif battery < 60 %}
+                    mdi:battery-50
+                  {% elif battery < 80 %}
+                    mdi:battery-70
+                  {% elif battery >= 80 %}
+                    mdi:battery-90
+                  {% elif battery > 90 %}
+                    mdi:battery
+                  {% else %}
+                    mdi:battery-unknown
+                  {% endif %}
+                layout: vertical
+                icon_color: >-
+                  {% set accessory =
+                  states('sensor.ikea_of_sweden_tradfri_remote_control_battery')|int
+                  %}
+
+                  {% if accessory < 25 %}
+                    red
+                  {% elif accessory < 50 %}
+                    amber
+                  {% elif accessory < 100 %}
+                    green
+                  {% endif %}
+                tap_action:
+                  action: more-info
+                entity: sensor.ikea_of_sweden_tradfri_remote_control_battery
+  - title: Security
+    path: security
+    icon: mdi:cctv
+    theme: No Borders Theme
+    subview: true
+    badges: []
+    cards: []
+  - title: Immersion
+    path: immersion
+    icon: mdi:water
+    subview: true
+    theme: No Borders Daniyal
+    badges: []
+    cards:
+      - type: custom:gap-card
+        height: 25
+      - type: custom:stack-in-card
+        cards:
+          - type: grid
+            square: false
+            columns: 1
+            cards:
+              - type: vertical-stack
+                cards:
+                  - type: horizontal-stack
+                    cards:
+                      - type: custom:mushroom-template-card
+                      - type: custom:mushroom-template-card
+                        entity: timer.immersion_timer
+                        fill_container: true
+                        icon: mdi:water
+                        icon_color: |-
+                          {% if states('switch.immersion_switch') == 'off' %}
+                            blue
+                          {% elif states('switch.immersion_switch') == 'on' %}
+                            red
+                          {% endif %}
+                        layout: vertical
+                        primary: >
+                          {% if is_state('timer.immersion_timer','active') %} {%
+                          set finish_timestamp =
+                          as_datetime(state_attr('timer.immersion_timer','finishes_at'))
+                          %}
+
+                          {% set current_timestamp = now() %}
+
+                          {% set remaining_in_seconds = (finish_timestamp -
+                          current_timestamp).seconds %}
+
+                          {{ timedelta(seconds = remaining_in_seconds) }} {%
+                          else %}
+                            {{ state_attr('timer.immersion_timer','duration') }}
+                          {% endif %}
+                        tap_action:
+                          action: more-info
+                        hold_action:
+                          action: toggle
+                        double_tap_action:
+                          action: none
+                      - type: custom:mushroom-template-card
+                        entity: switch.immersion_switch
+                        fill_container: true
+                        icon: mdi:power
+                        icon_color: green
+                        layout: vertical
+                        primary: Start
+                    tap_action:
+                      action: call-service
+                      service: switch.turn_on
+                      target:
+                        entity_id: switch.immersion_switch
+                      data: {}
+                    hold_action:
+                      action: more-info
+                    double_tap_action:
+                      action: none
+                  - type: horizontal-stack
+                    cards:
+                      - type: custom:mushroom-template-card
+                      - type: custom:mushroom-template-card
+                        primary: ''
+                        secondary: '+15'
+                        icon: mdi:plus
+                        icon_color: blue
+                        tap_action:
+                          action: call-service
+                          service: timer.change
+                          target:
+                            entity_id: timer.immersion_timer
+                          data:
+                            duration: '+00:15:00'
+                        fill_container: true
+                        layout: vertical
+                        entity: switch.immersion_switch
+                        hold_action:
+                          action: more-info
+                      - type: custom:mushroom-template-card
+                        primary: ''
+                        secondary: '+30'
+                        icon: mdi:plus
+                        icon_color: blue
+                        tap_action:
+                          action: toggle
+                        entity: switch.immersion_switch
+                        fill_container: true
+                        layout: vertical
+                        hold_action:
+                          action: more-info
+                      - type: custom:mushroom-template-card
+                        primary: ''
+                        secondary: Stop
+                        icon: mdi:hand-back-left
+                        entity: switch.immersion_switch
+                        hold_action:
+                          action: more-info
+                        tap_action:
+                          action: call-service
+                          service: timer.finish
+                          target:
+                            entity_id: timer.immersion_timer
+                          data: {}
+                        layout: vertical
+                        icon_color: red
+        columns: 1
+  - title: Shopping
+    path: shopping-list
+    theme: No Borders Daniyal
+    subview: true
+    type: custom:vertical-layout
+    icon: mdi:shopping
+    badges: []
+    cards:
+      - type: shopping-list
+        theme: No Borders Theme
+        title: Shopping List
+  - title: Vacuum
+    path: vacuum
+    icon: mdi:robot-vacuum
+    subview: true
+    theme: No Borders Daniyal
+    badges: []
+    cards:
+      - type: custom:mushroom-vacuum-card
+        entity: vacuum.roborock_s7_maxv
+        commands:
+          - stop
+          - locate
+          - clean_spot
+          - return_home
+          - start_pause
+        layout: vertical
+        icon_type: icon
+        tap_action:
+          action: more-info
+        icon_animation: true
+        fill_container: true
+      - type: custom:mushroom-template-card
+        primary: Clean Zone
+        secondary: ''
+        icon: mdi:target
+        tap_action:
+          action: call-service
+          service: vacuum.send_command
+          target:
+            entity_id: vacuum.roborock_s7_maxv
+          data:
+            command: app_segment_clean
+            params:
+              - segments:
+                  - 16
+        hold_action:
+          action: more-info
+        double_tap_action:
+          action: none
+        entity: vacuum.roborock_s7_maxv
+        icon_color: lightblue
+        layout: vertical
+  - title: Media
+    path: media
+    icon: mdi:multimedia
+    theme: No Borders Daniyal
+    subview: true
+    badges: []
+    cards:
+      - square: false
+        type: grid
+        cards:
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: navigate
+              navigation_path: remote
+            name: Remote
+            icon: mdi:remote-tv
+            theme: No Borders Daniyal
+            icon_height: 50px
+          - type: custom:mini-media-player
+            entity: media_player.home_cinema
+            name: Cinema
+            icon: mdi:projector
+            artwork: cover-fit
+            source: icon
+            info: scroll
+        columns: 1
+  - title: Climate
+    path: climate
+    icon: mdi:air-filter
+    subview: true
+    theme: No Borders Daniyal
+    badges: []
+    cards:
+      - square: true
+        type: grid
+        cards:
+          - type: custom:mushroom-climate-card
+            entity: climate.anaiahs_room_aircon
+            layout: vertical
+            fill_container: true
+            show_temperature_control: true
+            hvac_modes: []
+          - type: custom:mushroom-climate-card
+            entity: climate.ammi_abbu_room_aircon
+            layout: vertical
+            fill_container: true
+            show_temperature_control: true
+          - type: custom:mushroom-climate-card
+            entity: climate.cinema_aircon
+            layout: vertical
+            fill_container: true
+            show_temperature_control: true
+            hvac_modes: []
+          - type: custom:mushroom-climate-card
+            entity: climate.daniyals_room_aircon
+            layout: vertical
+            fill_container: true
+            show_temperature_control: true
+            hvac_modes: []
+          - type: custom:mushroom-climate-card
+            entity: climate.guest_room_aircon
+            layout: vertical
+            fill_container: true
+            show_temperature_control: true
+            hvac_modes: []
+          - type: custom:mushroom-climate-card
+            layout: vertical
+            fill_container: true
+            show_temperature_control: true
+            hvac_modes: []
+            entity: climate.living_room_aircon
+          - type: custom:mushroom-climate-card
+            entity: climate.malaikas_room_aircon
+            layout: vertical
+            fill_container: true
+            show_temperature_control: true
+            hvac_modes: []
+          - type: custom:mushroom-climate-card
+            layout: vertical
+            fill_container: true
+            show_temperature_control: true
+            hvac_modes: []
+            entity: climate.master_bedroom_aircon
+          - type: custom:mushroom-cover-card
+            entity: cover.cinema_room_blinds
+            show_position_control: true
+            show_buttons_control: true
+            fill_container: true
+            layout: vertical
+        columns: 2
+  - title: Alarm
+    path: alarm
+    icon: mdi:shield-home
+    subview: true
+    theme: No Borders Daniyal
+    badges: []
+    cards:
+      - type: custom:mushroom-alarm-control-panel-card
+        entity: alarm_control_panel.arcadia_alarm
+        states:
+          - armed_home
+          - armed_away
+          - armed_night
+          - armed_vacation
+        layout: vertical
+        fill_container: true
+        show_keypad: false
+        tap_action:
+          action: more-info
+        hold_action:
+          action: none
+        double_tap_action:
+          action: none
+        secondary_info: state
+        name: Arcadia Alarm
+      - square: true
+        type: grid
+        cards:
+          - type: custom:mushroom-template-card
+            primary: Alarm Settings
+            secondary: ''
+            icon: mdi:cog
+            layout: vertical
+            tap_action:
+              action: navigate
+              navigation_path: /alarmo
+            badge_icon: ''
+            fill_container: true
+        columns: 2
+  - title: ' '
+    path: ''
+    subview: true
+    badges: []
+    cards: []
+  - title: Remote
+    path: remote
+    icon: mdi:remote-tv
+    subview: true
+    theme: No Borders Daniyal
+    badges: []
+    cards:
+      - type: custom:mushroom-chips-card
+        chips:
+          - type: template
+            entity: media_player.samsung_the_frame_65
+            icon: mdi:television
+            icon_color: white
+            tap_action:
+              action: navigate
+              navigation_path: frame-tv-remote
+            content: Frame TV
+          - type: template
+            icon: mdi:apple
+            icon_color: amber
+            content: Cinema
+            entity: media_player.home_cinema
+            tap_action:
+              action: navigate
+              navigation_path: /dashboard-main/remote
+          - type: template
+            entity: media_player.ammi_abbu_apple_tv
+            icon: mdi:apple
+            content: Ammi&Abbu
+            tap_action:
+              action: navigate
+              navigation_path: /dashboard-main/ammi-abbu-tv-remote
+        alignment: center
+      - square: true
+        type: grid
+        cards:
+          - show_name: false
+            show_icon: true
+            type: button
+            tap_action:
+              action: call-service
+              service: media_player.volume_mute
+              target:
+                entity_id: media_player.xgimi_horizon_pro_android
+              data:
+                is_volume_muted: true
+            icon: mdi:volume-variant-off
+            theme: No Borders Daniyal
+            card_mod:
+              style: |
+                ha-card {
+                  background: transparent;
+                }
+          - type: custom:gap-card
+          - type: conditional
+            conditions:
+              - entity: media_player.home_cinema
+                state_not: standby
+            card:
+              show_name: false
+              show_icon: true
+              type: button
+              tap_action:
+                action: call-service
+                service: remote.send_command
+                target:
+                  entity_id: remote.home_cinema
+                data:
+                  delay_secs: 0.4
+                  hold_secs: 0
+                  command:
+                    - wakeup
+              icon: mdi:power
+              theme: No Borders Daniyal
+              card_mod:
+                style: |
+                  ha-card {
+                    background: transparent;
+                  }
+          - type: conditional
+            conditions:
+              - entity: media_player.home_cinema
+                state: standby
+            card:
+              show_name: false
+              show_icon: true
+              type: button
+              tap_action:
+                action: call-service
+                service: remote.send_command
+                target:
+                  entity_id: remote.home_cinema
+                data:
+                  delay_secs: 0.4
+                  hold_secs: 0
+                  command:
+                    - suspend
+              icon: mdi:power
+              theme: No Borders Daniyal
+              card_mod:
+                style: |
+                  ha-card {
+                    background: transparent;
+                  }
+          - type: custom:gap-card
+          - show_name: false
+            show_icon: true
+            type: button
+            tap_action:
+              action: call-service
+              service: remote.send_command
+              data:
+                num_repeats: 1
+                delay_secs: 0.4
+                hold_secs: 0
+              target: {}
+            icon: mdi:arrow-up
+            theme: No Borders Daniyal
+            card_mod:
+              style: |
+                ha-card {
+                  background: transparent;
+                }
+          - type: custom:gap-card
+          - show_name: false
+            show_icon: true
+            type: button
+            tap_action:
+              action: call-service
+              service: remote.send_command
+              target:
+                entity_id: remote.home_cinema
+              data:
+                delay_secs: 0.4
+                hold_secs: 0
+                command:
+                  - left
+            icon: mdi:arrow-left
+            card_mod:
+              style: |
+                ha-card {
+                  background: transparent;
+                }
+          - show_name: false
+            show_icon: true
+            type: button
+            tap_action:
+              action: call-service
+              service: remote.send_command
+              target:
+                entity_id: remote.home_cinema
+              data:
+                delay_secs: 0.4
+                hold_secs: 0
+                command:
+                  - select
+            icon: mdi:circle
+            hold_action:
+              action: call-service
+              service: remote.send_command
+              target:
+                entity_id: remote.home_cinema
+              data:
+                delay_secs: 0.4
+                hold_secs: 0
+                command:
+                  - home
+                num_repeats: 2
+            card_mod:
+              style: |
+                ha-card {
+                  background: transparent;
+                }
+          - show_name: false
+            show_icon: true
+            type: button
+            tap_action:
+              action: call-service
+              service: remote.send_command
+              target:
+                entity_id: remote.home_cinema
+              data:
+                delay_secs: 0.4
+                hold_secs: 0
+                command:
+                  - right
+            icon: mdi:arrow-right
+            card_mod:
+              style: |
+                ha-card {
+                  background: transparent;
+                }
+          - show_name: false
+            show_icon: true
+            type: button
+            tap_action:
+              action: call-service
+              service: media_player.media_play_pause
+              target:
+                entity_id: media_player.home_cinema
+              data: {}
+            icon: mdi:play-pause
+            card_mod:
+              style: |
+                ha-card {
+                  background: transparent;
+                }
+          - show_name: false
+            show_icon: true
+            type: button
+            tap_action:
+              action: call-service
+              service: remote.send_command
+              target:
+                entity_id: remote.home_cinema
+              data:
+                delay_secs: 0.4
+                hold_secs: 0
+                command:
+                  - down
+            icon: mdi:arrow-down
+            theme: No Borders Daniyal
+            card_mod:
+              style: |
+                ha-card {
+                  background: transparent;
+                }
+          - show_name: false
+            show_icon: true
+            type: button
+            tap_action:
+              action: call-service
+              service: remote.send_command
+              target:
+                entity_id: remote.home_cinema
+              data:
+                delay_secs: 0.4
+                hold_secs: 0.1
+                command:
+                  - menu
+            icon: mdi:keyboard-return
+            card_mod:
+              style: |
+                ha-card {
+                  background: transparent;
+                }
+          - show_name: false
+            show_icon: true
+            type: button
+            tap_action:
+              action: call-service
+              service: remote.send_command
+              target:
+                entity_id: remote.home_cinema
+              data:
+                delay_secs: 0.4
+                hold_secs: 0
+                command: volume_up
+            icon: mdi:volume-plus
+            theme: No Borders Daniyal
+            card_mod:
+              style: |
+                ha-card {
+                  background: transparent;
+                }
+          - type: custom:gap-card
+          - show_name: false
+            show_icon: true
+            type: button
+            tap_action:
+              action: call-service
+              service: remote.send_command
+              target:
+                entity_id: remote.home_cinema
+              data:
+                delay_secs: 0.4
+                hold_secs: 0
+                command:
+                  - volume_down
+            icon: mdi:volume-minus
+            theme: No Borders Daniyal
+            card_mod:
+              style: |
+                ha-card {
+                  background: transparent;
+                }
+        columns: 3
+      - square: false
+        type: grid
+        cards:
+          - type: picture
+            image: /local/images/netflix.jpg
+            tap_action:
+              action: call-service
+              service: media_player.select_source
+              target:
+                entity_id: media_player.home_cinema
+              data:
+                source: Netflix
+            card_mod:
+              style: |
+                ha-card {
+                  background: transparent;
+                }
+          - type: picture
+            image: /local/images/yt.png
+            tap_action:
+              action: call-service
+              service: media_player.select_source
+              target:
+                entity_id: media_player.home_cinema
+              data:
+                source: YouTube
+            card_mod:
+              style: |
+                ha-card {
+                  background: transparent;
+                }
+          - type: picture
+            image: /local/images/disneyplus.jpg
+            tap_action:
+              action: call-service
+              service: media_player.select_source
+              target:
+                entity_id: media_player.home_cinema
+              data:
+                source: Disney+
+        columns: 2
+      - type: conditional
+        conditions:
+          - entity: media_player.home_cinema
+            state_not: standby
+        card:
+          show_name: false
+          show_icon: true
+          type: button
+          tap_action:
+            action: call-service
+            service: remote.send_command
+            target:
+              entity_id: remote.home_cinema
+            data:
+              delay_secs: 0.4
+              hold_secs: 0
+              command:
+                - wakeup
+          icon: mdi:power
+          theme: No Borders Daniyal
+  - title: Frame TV Remote
+    path: frame-tv-remote
+    theme: No Borders Daniyal
+    icon: mdi:television
+    subview: true
+    badges: []
+    cards:
+      - type: custom:mushroom-chips-card
+        chips:
+          - type: template
+            entity: media_player.samsung_the_frame_65
+            icon: mdi:television
+            icon_color: amber
+            tap_action:
+              action: navigate
+              navigation_path: frame-tv-remote
+            content: Frame TV
+          - type: template
+            icon: mdi:apple
+            icon_color: white
+            content: Cinema
+            entity: media_player.home_cinema
+            tap_action:
+              action: navigate
+              navigation_path: /dashboard-main/remote
+          - type: template
+            entity: media_player.ammi_abbu_apple_tv
+            icon: mdi:apple
+            content: Ammi&Abbu
+            tap_action:
+              action: navigate
+              navigation_path: /dashboard-main/ammi-abbu-tv-remote
+        alignment: center
+      - square: true
+        type: grid
+        cards:
+          - show_name: false
+            show_icon: true
+            type: button
+            tap_action:
+              action: call-service
+              service: remote.send_command
+              target:
+                entity_id: remote.samsung_the_frame_65
+              data:
+                delay_secs: 0.4
+                hold_secs: 0
+                command:
+                  - KEY_MUTE
+            icon: mdi:volume-variant-off
+            theme: No Borders Daniyal
+            card_mod:
+              style: |
+                ha-card {
+                  background: transparent;
+                }
+          - type: custom:gap-card
+          - show_name: false
+            show_icon: true
+            type: button
+            tap_action:
+              action: call-service
+              service: remote.send_command
+              target:
+                entity_id: remote.samsung_the_frame_65
+              data:
+                delay_secs: 0.4
+                hold_secs: 0
+                command:
+                  - KEY_POWER
+            icon: mdi:power
+            theme: No Borders Daniyal
+            hold_action:
+              action: call-service
+              service: remote.send_command
+              target:
+                entity_id: remote.samsung_the_frame_65
+              data:
+                delay_secs: 0.4
+                command:
+                  - KEY_POWER
+                hold_secs: 5.5
+            card_mod:
+              style: |
+                ha-card {
+                  background: transparent;
+                }
+          - type: custom:gap-card
+          - show_name: false
+            show_icon: true
+            type: button
+            tap_action:
+              action: call-service
+              service: remote.send_command
+              data:
+                delay_secs: 0.4
+                hold_secs: 0
+                command:
+                  - KEY_UP
+              target:
+                entity_id: remote.samsung_the_frame_65
+            icon: mdi:arrow-up
+            theme: No Borders Daniyal
+            card_mod:
+              style: |
+                ha-card {
+                  background: transparent;
+                }
+          - type: custom:gap-card
+          - show_name: false
+            show_icon: true
+            type: button
+            tap_action:
+              action: call-service
+              service: remote.send_command
+              target:
+                entity_id: remote.samsung_the_frame_65
+              data:
+                delay_secs: 0.4
+                hold_secs: 0
+                command:
+                  - KEY_LEFT
+            icon: mdi:arrow-left
+            card_mod:
+              style: |
+                ha-card {
+                  background: transparent;
+                }
+          - show_name: false
+            show_icon: true
+            type: button
+            tap_action:
+              action: call-service
+              service: remote.send_command
+              target:
+                entity_id: remote.samsung_the_frame_65
+              data:
+                delay_secs: 0.4
+                hold_secs: 0
+                command:
+                  - KEY_ENTER
+            icon: mdi:circle
+            hold_action:
+              action: call-service
+              service: remote.send_command
+              target:
+                entity_id: remote.home_cinema
+              data:
+                delay_secs: 0.4
+                hold_secs: 0
+                command:
+                  - home
+                num_repeats: 2
+            card_mod:
+              style: |
+                ha-card {
+                  background: transparent;
+                }
+          - show_name: false
+            show_icon: true
+            type: button
+            tap_action:
+              action: call-service
+              service: remote.send_command
+              target:
+                entity_id: remote.samsung_the_frame_65
+              data:
+                delay_secs: 0.4
+                hold_secs: 0
+                command:
+                  - KEY_RIGHT
+            icon: mdi:arrow-right
+            card_mod:
+              style: |
+                ha-card {
+                  background: transparent;
+                }
+          - show_name: false
+            show_icon: true
+            type: button
+            tap_action:
+              action: call-service
+              service: media_player.media_play_pause
+              target:
+                entity_id: media_player.samsung_the_frame_65
+              data: {}
+            icon: mdi:play-pause
+            card_mod:
+              style: |
+                ha-card {
+                  background: transparent;
+                }
+          - show_name: false
+            show_icon: true
+            type: button
+            tap_action:
+              action: call-service
+              service: remote.send_command
+              target:
+                entity_id: remote.samsung_the_frame_65
+              data:
+                delay_secs: 0.4
+                hold_secs: 0
+                command:
+                  - KEY_DOWN
+            icon: mdi:arrow-down
+            theme: No Borders Daniyal
+            card_mod:
+              style: |
+                ha-card {
+                  background: transparent;
+                }
+          - show_name: false
+            show_icon: true
+            type: button
+            tap_action:
+              action: call-service
+              service: remote.send_command
+              target:
+                entity_id: remote.samsung_the_frame_65
+              data:
+                delay_secs: 0.4
+                hold_secs: 0.1
+                command:
+                  - KEY_RETURN
+            icon: mdi:keyboard-return
+            card_mod:
+              style: |
+                ha-card {
+                  background: transparent;
+                }
+          - show_name: false
+            show_icon: true
+            type: button
+            tap_action:
+              action: call-service
+              service: remote.send_command
+              target:
+                entity_id: remote.samsung_the_frame_65
+              data:
+                delay_secs: 0.4
+                hold_secs: 0
+                command:
+                  - KEY_VOLUP
+            icon: mdi:volume-plus
+            theme: No Borders Daniyal
+            card_mod:
+              style: |
+                ha-card {
+                  background: transparent;
+                }
+          - type: custom:gap-card
+          - show_name: false
+            show_icon: true
+            type: button
+            tap_action:
+              action: call-service
+              service: remote.send_command
+              target:
+                entity_id: remote.samsung_the_frame_65
+              data:
+                delay_secs: 0.4
+                hold_secs: 0
+                command:
+                  - KEY_VOLDOWN
+            icon: mdi:volume-minus
+            theme: No Borders Daniyal
+            card_mod:
+              style: |
+                ha-card {
+                  background: transparent;
+                }
+        columns: 3
+  - title: Ammi Abbu Apple TV Remote
+    path: ammi-abbu-tv-remote
+    icon: mdi:apple
+    theme: No Borders Daniyal
+    subview: true
+    badges: []
+    cards:
+      - type: custom:mushroom-chips-card
+        chips:
+          - type: template
+            entity: media_player.samsung_the_frame_65
+            icon: mdi:television
+            icon_color: white
+            tap_action:
+              action: navigate
+              navigation_path: frame-tv-remote
+            content: Frame TV
+          - type: template
+            icon: mdi:apple
+            icon_color: white
+            content: Cinema
+            entity: media_player.home_cinema
+            tap_action:
+              action: navigate
+              navigation_path: /dashboard-main/remote
+          - type: template
+            entity: media_player.ammi_abbu_apple_tv
+            icon: mdi:apple
+            content: Ammi&Abbu
+            tap_action:
+              action: navigate
+              navigation_path: /dashboard-main/ammi-abbu-tv-remote
+            icon_color: amber
+        alignment: center
+      - square: true
+        type: grid
+        cards:
+          - show_name: false
+            show_icon: true
+            type: button
+            tap_action:
+              action: call-service
+              service: media_player.volume_mute
+              target:
+                entity_id: media_player.xgimi_horizon_pro_android
+              data:
+                is_volume_muted: true
+            icon: mdi:volume-variant-off
+            theme: No Borders Daniyal
+            card_mod:
+              style: |
+                ha-card {
+                  background: transparent;
+                }
+          - type: custom:gap-card
+          - show_name: false
+            show_icon: true
+            type: button
+            tap_action:
+              action: call-service
+              service: remote.send_command
+              target:
+                entity_id: remote.home_cinema
+              data:
+                num_repeats: 1
+                delay_secs: 0.4
+                hold_secs: 0
+                command:
+                  - wakeup
+            icon: mdi:power
+            theme: No Borders Daniyal
+            card_mod:
+              style: |
+                ha-card {
+                  background: transparent;
+                }
+          - type: custom:gap-card
+          - show_name: false
+            show_icon: true
+            type: button
+            tap_action:
+              action: call-service
+              service: remote.send_command
+              data:
+                num_repeats: 1
+                delay_secs: 0.4
+                hold_secs: 0
+              target: {}
+            icon: mdi:arrow-up
+            theme: No Borders Daniyal
+            card_mod:
+              style: |
+                ha-card {
+                  background: transparent;
+                }
+          - type: custom:gap-card
+          - show_name: false
+            show_icon: true
+            type: button
+            tap_action:
+              action: call-service
+              service: remote.send_command
+              target:
+                entity_id: remote.home_cinema
+              data:
+                delay_secs: 0.4
+                hold_secs: 0
+                command:
+                  - left
+            icon: mdi:arrow-left
+            card_mod:
+              style: |
+                ha-card {
+                  background: transparent;
+                }
+          - show_name: false
+            show_icon: true
+            type: button
+            tap_action:
+              action: call-service
+              service: remote.send_command
+              target:
+                entity_id: remote.home_cinema
+              data:
+                delay_secs: 0.4
+                hold_secs: 0
+                command:
+                  - select
+            icon: mdi:circle
+            card_mod:
+              style: |
+                ha-card {
+                  background: transparent;
+                }
+          - show_name: false
+            show_icon: true
+            type: button
+            tap_action:
+              action: call-service
+              service: remote.send_command
+              target:
+                entity_id: remote.home_cinema
+              data:
+                delay_secs: 0.4
+                hold_secs: 0
+                command:
+                  - right
+            icon: mdi:arrow-right
+            card_mod:
+              style: |
+                ha-card {
+                  background: transparent;
+                }
+          - show_name: false
+            show_icon: true
+            type: button
+            tap_action:
+              action: call-service
+              service: media_player.media_play_pause
+              target:
+                entity_id: media_player.home_cinema
+              data: {}
+            icon: mdi:play-pause
+            card_mod:
+              style: |
+                ha-card {
+                  background: transparent;
+                }
+          - show_name: false
+            show_icon: true
+            type: button
+            tap_action:
+              action: call-service
+              service: remote.send_command
+              target:
+                entity_id: remote.home_cinema
+              data:
+                delay_secs: 0.4
+                hold_secs: 0
+                command:
+                  - down
+            icon: mdi:arrow-down
+            theme: No Borders Daniyal
+            card_mod:
+              style: |
+                ha-card {
+                  background: transparent;
+                }
+          - show_name: false
+            show_icon: true
+            type: button
+            tap_action:
+              action: call-service
+              service: remote.send_command
+              target:
+                entity_id: remote.home_cinema
+              data:
+                delay_secs: 0.4
+                hold_secs: 0.1
+                command:
+                  - menu
+            icon: mdi:keyboard-return
+            card_mod:
+              style: |
+                ha-card {
+                  background: transparent;
+                }
+          - show_name: false
+            show_icon: true
+            type: button
+            tap_action:
+              action: call-service
+              service: remote.send_command
+              target:
+                entity_id: remote.home_cinema
+              data:
+                delay_secs: 0.4
+                hold_secs: 0
+                command: volume_up
+            icon: mdi:volume-plus
+            theme: No Borders Daniyal
+            card_mod:
+              style: |
+                ha-card {
+                  background: transparent;
+                }
+          - type: custom:gap-card
+          - show_name: false
+            show_icon: true
+            type: button
+            tap_action:
+              action: call-service
+              service: remote.send_command
+              target:
+                entity_id: remote.home_cinema
+              data:
+                delay_secs: 0.4
+                hold_secs: 0
+                command:
+                  - volume_down
+            icon: mdi:volume-minus
+            theme: No Borders Daniyal
+            card_mod:
+              style: |
+                ha-card {
+                  background: transparent;
+                }
+        columns: 3
+      - square: false
+        type: grid
+        cards:
+          - type: picture
+            image: /local/images/netflix.jpg
+            tap_action:
+              action: call-service
+              service: media_player.select_source
+              target:
+                entity_id: media_player.home_cinema
+              data:
+                source: Netflix
+            card_mod:
+              style: |
+                ha-card {
+                  background: transparent;
+                }
+          - type: picture
+            image: /local/images/yt.png
+            tap_action:
+              action: call-service
+              service: media_player.select_source
+              target:
+                entity_id: media_player.home_cinema
+              data:
+                source: YouTube
+            card_mod:
+              style: |
+                ha-card {
+                  background: transparent;
+                }
+          - type: picture
+            image: /local/images/disneyplus.jpg
+            tap_action:
+              action: call-service
+              service: media_player.select_source
+              target:
+                entity_id: media_player.home_cinema
+              data:
+                source: Disney+
+        columns: 2
