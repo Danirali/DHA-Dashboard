@@ -1,0 +1,94 @@
+kiosk_mode:
+  user_settings:
+    - users:
+        - admin
+        - homeassistant
+      hide_sidebar: true
+    - users:
+        - anaiah
+        - daniyal
+        - riz
+        - mariam
+      kiosk: true
+      ignore_entity_settings: true
+views:
+  - title: Security
+    path: security
+    icon: mdi:cctv
+    theme: No Borders Theme
+    subview: true
+    kiosk_mode:
+      user_settings:
+        - users:
+            - ryan meek
+            - maykar
+          hide_sidebar: true
+        - users:
+            - daniyal
+          kiosk: true
+          ignore_entity_settings: true
+    type: custom:grid-layout
+    badges: []
+    cards:
+      - type: custom:mushroom-chips-card
+        chips:
+          - type: back
+          - type: menu
+      - square: false
+        type: grid
+        cards:
+          - camera_view: live
+            type: picture-glance
+            entities: []
+            theme: No Borders Daniyal
+            camera_image: camera.driveway
+            image: /local/images/unifi.png
+          - camera_view: live
+            type: picture-glance
+            entities: []
+            theme: No Borders Daniyal
+            camera_image: camera.garage
+            image: /local/images/unifi.png
+          - camera_view: live
+            type: picture-glance
+            entities: []
+            theme: No Borders Daniyal
+            camera_image: camera.garden_2
+            image: /local/images/unifi.png
+          - camera_view: live
+            type: picture-glance
+            entities: []
+            theme: No Borders Daniyal
+            camera_image: camera.garden2
+            image: /local/images/unifi.png
+          - camera_view: live
+            type: picture-glance
+            entities: []
+            theme: No Borders Daniyal
+            camera_image: camera.side
+            image: /local/images/unifi.png
+          - camera_view: live
+            type: picture-glance
+            entities: []
+            theme: No Borders Daniyal
+            camera_image: camera.g3_instant_high
+            image: /local/images/unifi.png
+          - camera_view: live
+            type: picture-glance
+            entities: []
+            theme: No Borders Daniyal
+            camera_image: camera.randall_front_1
+            image: /local/images/unifi.png
+          - camera_view: live
+            type: picture-glance
+            entities: []
+            theme: No Borders Daniyal
+            camera_image: camera.randall_front_2
+            image: /local/images/unifi.png
+          - camera_view: live
+            type: picture-glance
+            entities: []
+            theme: No Borders Daniyal
+            camera_image: camera.randall_garden
+            image: /local/images/unifi.png
+        columns: 3
