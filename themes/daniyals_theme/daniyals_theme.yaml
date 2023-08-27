@@ -1,0 +1,11 @@
+# If you want to customize it, copy the content in another folder and file and change the name.
+# https://www.home-assistant.io/integrations/frontend/#defining-themes
+No Borders Daniyal:
+    # Home Assistant override
+    ha-card-box-shadow: 0px
+    ha-card-border-width: 0
+    mush-chip-border-width: 0
+    mush-chip-box-shadow: 0px
+    modes:
+        light: {}
+        dark: {}
