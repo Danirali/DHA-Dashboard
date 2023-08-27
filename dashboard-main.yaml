@@ -151,7 +151,7 @@ views:
                     primary: ''
                     tap_action:
                       action: navigate
-                      navigation_path: /dashboard-main/security
+                      navigation_path: /dashboard-cctv/security
                     hold_action:
                       action: none
                     double_tap_action:
@@ -701,8 +701,7 @@ views:
               - type: custom:stack-in-card
                 cards:
                   - type: custom:slider-button-card
-                    entity: input_boolean.office_mode
-                    name: Office
+                    entity: light.master_bedroom
                     slider:
                       direction: left-right
                       background: gradient
@@ -719,7 +718,7 @@ views:
                       use_state_color: true
                       tap_action:
                         action: navigate
-                        navigation_path: ''
+                        navigation_path: master-bedroom
                       icon: ''
                     action_button:
                       mode: toggle
@@ -736,30 +735,44 @@ views:
                   - type: custom:mushroom-chips-card
                     chips:
                       - type: template
-                        entity: input_boolean.office_mode
-                        icon: mdi:moon-waning-crescent
-                        icon_color: purple
-                        tap_action:
-                          action: toggle
-                        hold_action:
-                          action: more-info
+                        entity: climate.master_bedroom_aircon
+                        icon: mdi:air-conditioner
+                        icon_color: >-
+                          {% if states('climate.master_bedroom_aircon') == 'off'
+                          %}
+                            grey
+                          {% elif states('climate.master_bedroom_aircon') ==
+                          'cool' %}
+                            blue
+                          {% elif states('climate.master_bedroom_aircon') ==
+                          'heat' %}
+                            red
+                          {% else %}
+                            yellow
+                          {% endif %}
                         card_mod:
                           style: |
                             ha-card {
                               border: none;
                             }
-                      - type: template
-                        entity: sensor.epson_wf_3520_series
-                        icon: mdi:printer
-                        icon_color: >-
-                          {% if is_state('sensor.epson_wf_3520_series','idle')
-                          %}
-                            grey
-                          {% else %}
-                            yellow
-                          {% endif %}
                         tap_action:
-                          action: none
+                          action: more-info
+                      - type: spacer
+                      - type: template
+                        entity: sensor.master_bedroom_aircon_room_temperature
+                        icon: mdi:thermometer
+                        icon_color: >-
+                          {% if
+                          states('sensor.master_bedroom_aircon_room_temperature')
+                          < '25' %}
+                            blue
+                          {% else %}
+                            red
+                          {% endif %}
+                        content: >-
+                          {{
+                          states('sensor.master_bedroom_aircon_room_temperature')
+                          }}°C
                         card_mod:
                           style: |
                             ha-card {
@@ -3123,7 +3136,8 @@ views:
               - type: custom:stack-in-card
                 cards:
                   - type: custom:slider-button-card
-                    entity: light.master_bedroom
+                    entity: input_boolean.office_mode
+                    name: Office
                     slider:
                       direction: left-right
                       background: gradient
@@ -3140,7 +3154,7 @@ views:
                       use_state_color: true
                       tap_action:
                         action: navigate
-                        navigation_path: master-bedroom
+                        navigation_path: ''
                       icon: ''
                     action_button:
                       mode: toggle
@@ -3157,44 +3171,30 @@ views:
                   - type: custom:mushroom-chips-card
                     chips:
                       - type: template
-                        entity: climate.master_bedroom_aircon
-                        icon: mdi:air-conditioner
-                        icon_color: >-
-                          {% if states('climate.master_bedroom_aircon') == 'off'
-                          %}
-                            grey
-                          {% elif states('climate.master_bedroom_aircon') ==
-                          'cool' %}
-                            blue
-                          {% elif states('climate.master_bedroom_aircon') ==
-                          'heat' %}
-                            red
-                          {% else %}
-                            yellow
-                          {% endif %}
+                        entity: input_boolean.office_mode
+                        icon: mdi:moon-waning-crescent
+                        icon_color: purple
+                        tap_action:
+                          action: toggle
+                        hold_action:
+                          action: more-info
                         card_mod:
                           style: |
                             ha-card {
                               border: none;
                             }
-                        tap_action:
-                          action: more-info
-                      - type: spacer
                       - type: template
-                        entity: sensor.master_bedroom_aircon_room_temperature
-                        icon: mdi:thermometer
+                        entity: sensor.epson_wf_3520_series
+                        icon: mdi:printer
                         icon_color: >-
-                          {% if
-                          states('sensor.master_bedroom_aircon_room_temperature')
-                          < '25' %}
-                            blue
+                          {% if is_state('sensor.epson_wf_3520_series','idle')
+                          %}
+                            grey
                           {% else %}
-                            red
+                            yellow
                           {% endif %}
-                        content: >-
-                          {{
-                          states('sensor.master_bedroom_aircon_room_temperature')
-                          }}°C
+                        tap_action:
+                          action: none
                         card_mod:
                           style: |
                             ha-card {
@@ -3512,6 +3512,60 @@ views:
           - type: horizontal-stack
             cards:
               - type: custom:mushroom-template-card
+                primary: Cloak Room
+                secondary: ''
+                icon: mdi:motion-sensor
+                layout: vertical
+                icon_color: >-
+                  {% if
+                  is_state('binary_sensor.lumi_lumi_motion_ac02_iaszone','unavailable')
+                  %}
+                    grey
+                  {% else %}
+                    green
+                  {% endif %}
+                entity: sensor.lumi_lumi_motion_ac02_battery
+              - type: custom:mushroom-template-card
+                primary: '{{ states(''sensor.lumi_lumi_motion_ac02_battery'') }}%'
+                secondary: ''
+                icon: >-
+                  {% set battery =
+                  states('sensor.lumi_lumi_motion_ac02_battery')|int %}
+
+
+                  {% if battery < 20 %}
+                    mdi:battery-10
+                  {% elif battery < 40 %}
+                    mdi:battery-30
+                  {% elif battery < 60 %}
+                    mdi:battery-50
+                  {% elif battery < 80 %}
+                    mdi:battery-70
+                  {% elif battery >= 80 %}
+                    mdi:battery-90
+                  {% elif battery > 90 %}
+                    mdi:battery
+                  {% else %}
+                    mdi:battery-unknown
+                  {% endif %}
+                layout: vertical
+                icon_color: >-
+                  {% set accessory =
+                  states('sensor.lumi_lumi_motion_ac02_battery')|int %}
+
+                  {% if accessory < 25 %}
+                    red
+                  {% elif accessory < 50 %}
+                    amber
+                  {% elif accessory < 100 %}
+                    green
+                  {% endif %}
+                tap_action:
+                  action: more-info
+                entity: sensor.lumi_lumi_motion_ac02_battery
+          - type: horizontal-stack
+            cards:
+              - type: custom:mushroom-template-card
                 primary: Ammi's Button
                 secondary: ''
                 icon: mdi:camera-control
@@ -3561,13 +3615,6 @@ views:
                 tap_action:
                   action: more-info
                 entity: sensor.ikea_of_sweden_tradfri_remote_control_battery
-  - title: Security
-    path: security
-    icon: mdi:cctv
-    theme: No Borders Theme
-    subview: true
-    badges: []
-    cards: []
   - title: Immersion
     path: immersion
     icon: mdi:water
@@ -3743,6 +3790,7 @@ views:
     icon: mdi:multimedia
     theme: No Borders Daniyal
     subview: true
+    type: custom:vertical-layout
     badges: []
     cards:
       - square: false
@@ -3758,14 +3806,82 @@ views:
             icon: mdi:remote-tv
             theme: No Borders Daniyal
             icon_height: 50px
-          - type: custom:mini-media-player
-            entity: media_player.home_cinema
-            name: Cinema
-            icon: mdi:projector
-            artwork: cover-fit
-            source: icon
-            info: scroll
+          - type: custom:swipe-card
+            cards:
+              - type: custom:mini-media-player
+                entity: media_player.home_cinema
+                name: Cinema Room Apple TV
+                icon: mdi:apple
+                artwork: full-cover
+                source: full
+                info: scroll
+                volume_stateless: true
+                toggle_power: false
+              - type: custom:mini-media-player
+                entity: media_player.xgimi_horizon_pro_android
+                name: XGIMI HORIZON PRO
+                icon: mdi:projector
+                artwork: full-cover
+                source: full
+                info: scroll
+                group: false
+                volume_stateless: true
+                toggle_power: false
+                sound_mode: icon
+              - type: custom:mini-media-player
+                entity: media_player.samsung_the_frame_65
+                icon: mdi:television
+                artwork: full-cover
+                source: full
+                info: scroll
+                name: Frame TV
+                toggle_power: true
+                volume_stateless: true
+                group: false
+              - type: custom:mini-media-player
+                entity: media_player.ammi_abbu_apple_tv
+                icon: mdi:apple
+                artwork: full-cover
+                source: full
+                info: scroll
+                name: Ammi Abbu Apple TV
+                toggle_power: false
+                volume_stateless: true
         columns: 1
+      - type: custom:swipe-card
+        cards:
+          - type: custom:mini-media-player
+            entity: media_player.hallway_2
+            icon: mdi:speaker
+            artwork: full-cover
+            source: full
+            info: scroll
+            volume_stateless: false
+            scale: '1.25'
+          - type: custom:mini-media-player
+            entity: media_player.kitchen_2
+            icon: mdi:speaker
+            artwork: full-cover
+            source: full
+            info: scroll
+            volume_stateless: false
+            scale: '1.25'
+          - type: custom:mini-media-player
+            entity: media_player.landing_2
+            icon: mdi:speaker
+            artwork: full-cover
+            source: full
+            info: scroll
+            volume_stateless: false
+            scale: '1.25'
+          - type: custom:mini-media-player
+            entity: media_player.gym_2
+            icon: mdi:speaker
+            artwork: full-cover
+            source: full
+            info: scroll
+            volume_stateless: false
+            scale: '1.25'
   - title: Climate
     path: climate
     icon: mdi:air-filter
@@ -3879,6 +3995,7 @@ views:
     icon: mdi:remote-tv
     subview: true
     theme: No Borders Daniyal
+    type: custom:vertical-layout
     badges: []
     cards:
       - type: custom:mushroom-chips-card
@@ -4202,31 +4319,12 @@ views:
               data:
                 source: Disney+
         columns: 2
-      - type: conditional
-        conditions:
-          - entity: media_player.home_cinema
-            state_not: standby
-        card:
-          show_name: false
-          show_icon: true
-          type: button
-          tap_action:
-            action: call-service
-            service: remote.send_command
-            target:
-              entity_id: remote.home_cinema
-            data:
-              delay_secs: 0.4
-              hold_secs: 0
-              command:
-                - wakeup
-          icon: mdi:power
-          theme: No Borders Daniyal
   - title: Frame TV Remote
     path: frame-tv-remote
     theme: No Borders Daniyal
     icon: mdi:television
     subview: true
+    type: custom:vertical-layout
     badges: []
     cards:
       - type: custom:mushroom-chips-card
@@ -4500,6 +4598,7 @@ views:
     icon: mdi:apple
     theme: No Borders Daniyal
     subview: true
+    type: custom:vertical-layout
     badges: []
     cards:
       - type: custom:mushroom-chips-card
@@ -4539,7 +4638,7 @@ views:
               action: call-service
               service: media_player.volume_mute
               target:
-                entity_id: media_player.xgimi_horizon_pro_android
+                entity_id: media_player.ammi_abbu_apple_tv
               data:
                 is_volume_muted: true
             icon: mdi:volume-variant-off
@@ -4550,27 +4649,56 @@ views:
                   background: transparent;
                 }
           - type: custom:gap-card
-          - show_name: false
-            show_icon: true
-            type: button
-            tap_action:
-              action: call-service
-              service: remote.send_command
-              target:
-                entity_id: remote.home_cinema
-              data:
-                num_repeats: 1
-                delay_secs: 0.4
-                hold_secs: 0
-                command:
-                  - wakeup
-            icon: mdi:power
-            theme: No Borders Daniyal
-            card_mod:
-              style: |
-                ha-card {
-                  background: transparent;
-                }
+          - type: conditional
+            conditions:
+              - entity: media_player.ammi_abbu_apple_tv
+                state_not: standby
+            card:
+              show_name: false
+              show_icon: true
+              type: button
+              tap_action:
+                action: call-service
+                service: remote.send_command
+                target:
+                  entity_id: remote.ammi_abbu_apple_tv
+                data:
+                  delay_secs: 0.4
+                  hold_secs: 0
+                  command:
+                    - wakeup
+              icon: mdi:power
+              theme: No Borders Daniyal
+              card_mod:
+                style: |
+                  ha-card {
+                    background: transparent;
+                  }
+          - type: conditional
+            conditions:
+              - entity: media_player.ammi_abbu_apple_tv
+                state: standby
+            card:
+              show_name: false
+              show_icon: true
+              type: button
+              tap_action:
+                action: call-service
+                service: remote.send_command
+                target:
+                  entity_id: remote.ammi_abbu_apple_tv
+                data:
+                  delay_secs: 0.4
+                  hold_secs: 0
+                  command:
+                    - suspend
+              icon: mdi:power
+              theme: No Borders Daniyal
+              card_mod:
+                style: |
+                  ha-card {
+                    background: transparent;
+                  }
           - type: custom:gap-card
           - show_name: false
             show_icon: true
@@ -4598,7 +4726,7 @@ views:
               action: call-service
               service: remote.send_command
               target:
-                entity_id: remote.home_cinema
+                entity_id: remote.ammi_abbu_apple_tv
               data:
                 delay_secs: 0.4
                 hold_secs: 0
@@ -4617,13 +4745,24 @@ views:
               action: call-service
               service: remote.send_command
               target:
-                entity_id: remote.home_cinema
+                entity_id: remote.ammi_abbu_apple_tv
               data:
                 delay_secs: 0.4
                 hold_secs: 0
                 command:
                   - select
             icon: mdi:circle
+            hold_action:
+              action: call-service
+              service: remote.send_command
+              target:
+                entity_id: remote.ammi_abbu_apple_tv
+              data:
+                delay_secs: 0.4
+                hold_secs: 0
+                command:
+                  - home
+                num_repeats: 2
             card_mod:
               style: |
                 ha-card {
@@ -4636,7 +4775,7 @@ views:
               action: call-service
               service: remote.send_command
               target:
-                entity_id: remote.home_cinema
+                entity_id: remote.ammi_abbu_apple_tv
               data:
                 delay_secs: 0.4
                 hold_secs: 0
@@ -4655,7 +4794,7 @@ views:
               action: call-service
               service: media_player.media_play_pause
               target:
-                entity_id: media_player.home_cinema
+                entity_id: media_player.ammi_abbu_apple_tv
               data: {}
             icon: mdi:play-pause
             card_mod:
@@ -4670,7 +4809,7 @@ views:
               action: call-service
               service: remote.send_command
               target:
-                entity_id: remote.home_cinema
+                entity_id: remote.ammi_abbu_apple_tv
               data:
                 delay_secs: 0.4
                 hold_secs: 0
@@ -4690,7 +4829,7 @@ views:
               action: call-service
               service: remote.send_command
               target:
-                entity_id: remote.home_cinema
+                entity_id: remote.ammi_abbu_apple_tv
               data:
                 delay_secs: 0.4
                 hold_secs: 0.1
@@ -4709,7 +4848,7 @@ views:
               action: call-service
               service: remote.send_command
               target:
-                entity_id: remote.home_cinema
+                entity_id: remote.ammi_abbu_apple_tv
               data:
                 delay_secs: 0.4
                 hold_secs: 0
@@ -4729,7 +4868,7 @@ views:
               action: call-service
               service: remote.send_command
               target:
-                entity_id: remote.home_cinema
+                entity_id: remote.ammi_abbu_apple_tv
               data:
                 delay_secs: 0.4
                 hold_secs: 0
@@ -4743,44 +4882,3 @@ views:
                   background: transparent;
                 }
         columns: 3
-      - square: false
-        type: grid
-        cards:
-          - type: picture
-            image: /local/images/netflix.jpg
-            tap_action:
-              action: call-service
-              service: media_player.select_source
-              target:
-                entity_id: media_player.home_cinema
-              data:
-                source: Netflix
-            card_mod:
-              style: |
-                ha-card {
-                  background: transparent;
-                }
-          - type: picture
-            image: /local/images/yt.png
-            tap_action:
-              action: call-service
-              service: media_player.select_source
-              target:
-                entity_id: media_player.home_cinema
-              data:
-                source: YouTube
-            card_mod:
-              style: |
-                ha-card {
-                  background: transparent;
-                }
-          - type: picture
-            image: /local/images/disneyplus.jpg
-            tap_action:
-              action: call-service
-              service: media_player.select_source
-              target:
-                entity_id: media_player.home_cinema
-              data:
-                source: Disney+
-        columns: 2
