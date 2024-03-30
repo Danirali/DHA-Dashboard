@@ -1,0 +1,427 @@
+views:
+  - title: Home
+    type: custom:grid-layout
+    sections: []
+    cards:
+      - square: false
+        type: grid
+        cards:
+          - type: vertical-stack
+            cards:
+              - type: custom:clock-weather-card
+                entity: weather.forecast_arcadia
+                animated_icon: true
+                weather_icon_type: fill
+                forecast_days: 5
+                locale: en-GB
+                time_format: 24
+                hide_today_section: false
+                hide_forecast_section: true
+                hide_clock: false
+                hide_date: false
+                hourly_forecast: false
+                use_browser_time: false
+                card_mod:
+                  style: |
+                    clock-weather-card-today {
+                      height: 320px;
+                    }
+              - type: custom:gap-card
+                height: 50px
+              - type: custom:bubble-card
+                card_type: separator
+                name: Security
+                icon: mdi:cctv
+              - type: custom:swipe-card
+                cards:
+                  - type: grid
+                    square: false
+                    cards:
+                      - type: picture-glance
+                        camera_view: auto
+                        title: ''
+                        entities: []
+                        image: /local/images/unifi.png
+                        camera_image: camera.driveway_medium
+                        aspect_ratio: '1:1'
+                        theme: No Borders Daniyal
+                        card_mod:
+                          style: |
+                            ha-card {
+                              margin: 5px;
+                            }
+                      - type: vertical-stack
+                        cards:
+                          - type: picture-glance
+                            camera_view: auto
+                            title: ''
+                            entities: []
+                            image: /local/images/unifi.png
+                            camera_image: camera.front_garage_medium
+                            aspect_ratio: '1:0.5'
+                            theme: No Borders Daniyal
+                            card_mod:
+                              style: |
+                                ha-card {
+                                  margin: 5px;
+                                }
+                          - type: picture-glance
+                            camera_view: auto
+                            title: ''
+                            entities: []
+                            image: /local/images/unifi.png
+                            camera_image: camera.side_entrance_medium
+                            aspect_ratio: '1:0.5'
+                            theme: No Borders Daniyal
+                            card_mod:
+                              style: |
+                                ha-card {
+                                  margin: 5px;
+                                }
+                    columns: 2
+                  - type: grid
+                    square: false
+                    cards:
+                      - type: picture-glance
+                        camera_view: auto
+                        title: ''
+                        entities: []
+                        image: /local/images/unifi.png
+                        camera_image: camera.garden_2_medium
+                        aspect_ratio: '1:1'
+                        theme: No Borders Daniyal
+                        card_mod:
+                          style: |
+                            ha-card {
+                              margin: 5px;
+                            }
+                      - type: vertical-stack
+                        cards:
+                          - type: picture-glance
+                            camera_view: auto
+                            title: ''
+                            entities: []
+                            image: /local/images/unifi.png
+                            camera_image: camera.office_medium
+                            aspect_ratio: '1:0.5'
+                            theme: No Borders Daniyal
+                            card_mod:
+                              style: |
+                                ha-card {
+                                  margin: 5px;
+                                }
+                          - type: picture-glance
+                            camera_view: auto
+                            title: ''
+                            entities: []
+                            image: /local/images/unifi.png
+                            camera_image: camera.side_entrance_g4_medium
+                            aspect_ratio: '1:0.5'
+                            theme: No Borders Daniyal
+                            card_mod:
+                              style: |
+                                ha-card {
+                                  margin: 5px;
+                                }
+                    columns: 2
+              - type: custom:bubble-card
+                card_type: separator
+                name: Alarm
+                icon: mdi:shield-home
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-alarm-control-panel-card
+                    entity: alarm_control_panel.arcadia_alarm
+                    states: []
+                    show_keypad: false
+                    primary_info: name
+                    secondary_info: state
+                    tap_action:
+                      action: more-info
+                    hold_action:
+                      action: more-info
+                    double_tap_action:
+                      action: none
+                    layout: vertical
+          - type: vertical-stack
+            cards:
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mini-graph-card
+                    entities:
+                      - sensor.living_room_aircon_room_temperature
+                    name: Living Room
+                    hours_to_show: 6
+                  - type: custom:mini-graph-card
+                    entities:
+                      - sensor.cinema_aircon_room_temperature
+                    name: Cinema Room
+                    hours_to_show: 6
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mini-graph-card
+                    entities:
+                      - sensor.ammi_abbu_room_aircon_room_temperature
+                    name: Ammi's Room
+                    hours_to_show: 6
+                  - type: tile
+                    vertical: true
+                    state_content: last-changed
+                    entity: binary_sensor.lumi_lumi_sensor_magnet_aq2_opening
+                    icon: mdi:door-closed-lock
+              - type: custom:gap-card
+                height: 50px
+              - type: custom:bubble-card
+                card_type: separator
+                name: Lights
+                icon: mdi:lightbulb
+              - type: horizontal-stack
+                cards:
+                  - show_name: true
+                    show_icon: true
+                    type: custom:button-card
+                    state:
+                      - value: 'on'
+                        color: rgba(247, 195, 49)
+                        styles:
+                          name:
+                            - color: black
+                          card:
+                            - background-color: white
+                      - value: 'off'
+                        color: gray
+                        styles:
+                          name:
+                            - color: white
+                          card:
+                            - background-color: rgba(31,31,31)
+                    tap_action:
+                      action: toggle
+                    entity: light.hallway
+                    icon: mdi:light-recessed
+                    name: Hallway Lights
+                    theme: No Borders Daniyal
+                    styles:
+                      name:
+                        - justify-self: start
+                        - margin: 10px
+                      icon:
+                        - justify-self: start
+                        - margin-right: 75px
+                        - margin-bottom: 20px
+                      card:
+                        - width: 145px
+                        - height: 150px
+                  - show_name: true
+                    show_icon: true
+                    type: custom:button-card
+                    state:
+                      - value: 'on'
+                        color: rgba(247, 195, 49)
+                        styles:
+                          name:
+                            - color: black
+                          card:
+                            - background-color: white
+                      - value: 'off'
+                        color: gray
+                        styles:
+                          name:
+                            - color: white
+                          card:
+                            - background-color: rgba(31,31,31)
+                    tap_action:
+                      action: toggle
+                    entity: light.utility_kitchen
+                    icon: mdi:track-light
+                    name: Kitchen Spotlights
+                    theme: No Borders Daniyal
+                    styles:
+                      name:
+                        - justify-self: start
+                        - margin: 10px
+                      icon:
+                        - justify-self: start
+                        - margin-right: 75px
+                        - margin-bottom: 20px
+                      card:
+                        - width: 147px
+                        - height: 150px
+                  - show_name: true
+                    show_icon: true
+                    type: custom:button-card
+                    state:
+                      - value: 'on'
+                        color: rgba(247, 195, 49)
+                        styles:
+                          name:
+                            - color: black
+                          card:
+                            - background-color: white
+                      - value: 'off'
+                        color: gray
+                        styles:
+                          name:
+                            - color: white
+                          card:
+                            - background-color: rgba(31,31,31)
+                    tap_action:
+                      action: toggle
+                    entity: light.living_room_wall_lights
+                    icon: mdi:wall-sconce
+                    name: Wall Lights
+                    theme: No Borders Daniyal
+                    styles:
+                      name:
+                        - justify-self: start
+                        - margin: 10px
+                      icon:
+                        - justify-self: start
+                        - margin-right: 75px
+                        - margin-bottom: 20px
+                      card:
+                        - width: 147px
+                        - height: 150px
+                  - show_name: true
+                    show_icon: true
+                    type: custom:button-card
+                    state:
+                      - value: 'on'
+                        color: rgba(247, 195, 49)
+                        styles:
+                          name:
+                            - color: black
+                          card:
+                            - background-color: white
+                      - value: 'off'
+                        color: gray
+                        styles:
+                          name:
+                            - color: white
+                          card:
+                            - background-color: rgba(31,31,31)
+                    tap_action:
+                      action: toggle
+                    entity: light.hallway
+                    icon: mdi:light-recessed
+                    name: Hallway Lights
+                    theme: No Borders Daniyal
+                    styles:
+                      name:
+                        - justify-self: start
+                        - margin: 10px
+                      icon:
+                        - justify-self: start
+                        - margin-right: 75px
+                        - margin-bottom: 20px
+                      card:
+                        - width: 145px
+                        - height: 150px
+          - type: vertical-stack
+            cards:
+              - type: custom:system-flow-card
+                speed: 6
+                fadeIdylElements: true
+                system:
+                  unit: kWh
+                  icon: mdi:home
+                  color: '#0089b6'
+                elements:
+                  - value: sensor.shellyem3_channel_a_energy
+                    icon: mdi:alpha-a-box-outline
+                    position: left
+                    color: '#B62D00'
+                  - value: sensor.shellyem3_channel_b_energy
+                    icon: mdi:alpha-b-box-outline
+                    position: top
+                    color: '#6ffc03'
+                  - value: sensor.shellyem3_channel_c_energy
+                    icon: mdi:alpha-c-box-outline
+                    position: right
+                    color: '#fcba03'
+                  - value: sensor.office_desk_plug_energy
+                    icon: mdi:power-socket-uk
+                    position: left
+                    color: '#4e32a8'
+                    extras:
+                      left: sensor.smart_plug_2206067139835251070148e1e9951299_power
+                  - value: sensor.smart_plug_2206067139835251070148e1e9951299_energy
+                    icon: mdi:molecule-co2
+                    position: right
+                    color: '#66aee8'
+              - type: horizontal-stack
+                cards:
+                  - show_name: true
+                    show_icon: true
+                    type: button
+                    tap_action:
+                      action: toggle
+                    entity: scene.goodnight
+                  - show_name: true
+                    show_icon: true
+                    type: button
+                    tap_action:
+                      action: toggle
+                    entity: scene.goodnight
+              - type: horizontal-stack
+                cards:
+                  - show_name: true
+                    show_icon: true
+                    type: button
+                    tap_action:
+                      action: toggle
+                    entity: scene.goodnight
+                  - show_name: true
+                    show_icon: true
+                    type: button
+                    tap_action:
+                      action: toggle
+                    entity: scene.goodnight
+              - type: custom:gap-card
+                height: 50px
+              - type: custom:bubble-card
+                card_type: separator
+                name: Timers
+                icon: mdi:clock-time-eight
+              - type: horizontal-stack
+                cards:
+                  - type: tile
+                    vertical: true
+                    hide_state: true
+                    show_entity_picture: false
+                    entity: script.turn_on_ac_timer
+                  - show_name: true
+                    show_icon: true
+                    type: custom:button-card
+                    state:
+                      - value: 'on'
+                        color: rgba(247, 195, 49)
+                        styles:
+                          name:
+                            - color: black
+                          card:
+                            - background-color: white
+                      - value: 'off'
+                        color: gray
+                        styles:
+                          name:
+                            - color: white
+                          card:
+                            - background-color: rgba(31,31,31)
+                    tap_action:
+                      action: more-info
+                    entity: script.create_timer
+                    theme: No Borders Daniyal
+                    styles:
+                      name:
+                        - justify-self: start
+                        - margin: 10px
+                      icon:
+                        - justify-self: start
+                        - margin-right: 75px
+                        - margin-bottom: 20px
+                      card:
+                        - width: 145px
+                        - height: 150px
+        columns: 3
+    theme: No Borders Daniyal
